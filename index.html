@@ -8,7 +8,7 @@
   </head>
   <body>
 
-    <form>
+    <form method="POST">
 
       <div class="header">
         <h1> Update Your Contact Information </h1>
@@ -48,6 +48,13 @@
                 <input type="tel"> <input placeholder="ext" type="tel">
               </div>
               <a href="#">+ Add another number</a>
+
+              <script src="add-input.js" language="Javascript" type="text/javascript"></script>
+                 <div id="dynamicInput">
+                      Entry 1<br><input type="text" name="myInputs[]">
+                 </div>
+                 <input type="button" value="Add another text input" onClick="addInput('dynamicInput');">
+
             </div>
           <div>
           </div>
