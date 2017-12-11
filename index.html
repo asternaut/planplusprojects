@@ -18,7 +18,10 @@
         </div>
 
         <div class="form-content">
-        <h2> Keith Norris </h2>
+          <div class="person-to-update">
+            <img src="profile.png">
+            <h2> Keith Norris </h2>
+          </div>
 
         <fieldset>
           <div class="flex-fields">
@@ -46,20 +49,18 @@
             </div>
             <div class="short-input">
               <label for="businessPhone">Work Phone</label>
-              <div class="double-short-input">
-                <input type="tel"> <div class="line-left"></div> <input placeholder="ext" type="tel"> <div class="line-left"></div>
-              </div>
+                <input type="tel"> <div class="line-left"></div>
 
               <script src="add-input.js" language="Javascript" type="text/javascript"></script>
 
                 <div id="dynamicInput">
-                <div class="short-input">
+              <!--   <div class="short-input">
                   <label for="businessPhone">Work Phone</label>
                   <div class="double-short-input">
                     <input type="tel"> <div class="line-left"></div> <input placeholder="ext" type="tel" name="myInputs[]"> <div class="line-left"></div>
                    </div>
-                    <!-- Entry 1<br><input type="text" name="myInputs[]"> -->
-                </div>
+                    Entry 1<br><input type="text" name="myInputs[]">
+                </div> -->
                 <input class="input-button" type="button" value="+Add another number" onClick="addInput('dynamicInput');"> <div class="line-left"></div>
                 </div>
           <div>

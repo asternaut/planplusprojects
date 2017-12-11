@@ -9,8 +9,12 @@ body{
 
 h1{
   font-size: 20pt;
-  color: #95989A;
 }
+
+h2{
+  color: #444;
+}
+
 
 form{
   margin: 0 auto;
@@ -34,6 +38,20 @@ label{
   font-weight: 500;
   color: #A1A1A1;
   font-size: 11pt;
+}
+
+input[type='email'] {
+    background-image: url(email.png);
+    background-position: 7px 7px;
+    background-repeat: no-repeat;
+    padding-left: 35px;
+}
+
+input[type='tel'] {
+    background-image: url(tel.png);
+    background-position: 7px 7px;
+    background-repeat: no-repeat;
+    padding-left: 35px;
 }
 
 abbr{
@@ -79,11 +97,25 @@ button:hover{
 
 .header h1{
   color: white;
+  font-weight: 100;
+  font-size: 16pt;
 }
 
 .header img{
   width: 151px;
   height: 36px;
+}
+
+.person-to-update{
+    display: flex;
+    align-items: center;
+    margin-left: -70px;
+}
+
+.person-to-update img{
+  width: 50px;
+  height: 50px;
+  padding-right: 20px;
 }
 
 .form-content{
@@ -174,7 +206,7 @@ input:focus, select:focus{
   margin-right: 12px;
 }
 
-.double-short-input input:last-child{
+.double-short-input input:last-of-type{
   width: 60px;
 }
 
