@@ -10,28 +10,30 @@
 
     <form method="POST">
 
-      <div class="header">
-        <h1> Update Your Contact Information </h1>
-        <img src="logo-plan-plus.png">
-      </div>
-
       <div class="form">
+
+        <div class="header">
+          <h1> Update Your Contact Information </h1>
+          <img src="logo-plan-plus.png">
+        </div>
+
+        <div class="form-content">
         <h2> Keith Norris </h2>
 
         <fieldset>
           <div class="flex-fields">
             <div class="name-info long-input first-div">
               <label for="first">First Name<abbr title="required">*</abbr></label>
-              <input  placeholder="Keith" type="text" id="first">
+              <input  placeholder="Keith" type="text" id="first"> <div class="line-left"></div>
 
               <label for="first" placeholder="Norris">Last Name<abbr title="required">*</abbr></label>
-              <input  placeholder="Norris" type="text" id="last">
+              <input  placeholder="Norris" type="text" id="last"> <div class="line-left"></div>
             </div>
             <div class="job-info short-input">
                 <label for="job">Job Title</label>
-               <input type="text" id="job">
+               <input type="text" id="job"> <div class="line-left"></div>
               <label for="company">Company</label>
-              <input type="text" id="company">
+              <input type="text" id="company"> <div class="line-left"></div>
             </div>
           </div>
         </fieldset>
@@ -39,23 +41,27 @@
         <fieldset>
           <div class="flex-fields">
             <div class="first-div long-input">
-              <label for="email">Email</label><input type="email" id="mail" name="usermail">
+              <label for="email">Email</label><input type="email" id="mail" name="usermail"> <div class="line-left"></div>
               <a href="#">+ Add another email</a>
             </div>
             <div class="short-input">
               <label for="businessPhone">Work Phone</label>
               <div class="double-short-input">
-                <input type="tel"> <input placeholder="ext" type="tel">
+                <input type="tel"> <div class="line-left"></div> <input placeholder="ext" type="tel"> <div class="line-left"></div>
               </div>
-              <a href="#">+ Add another number</a>
 
               <script src="add-input.js" language="Javascript" type="text/javascript"></script>
-                 <div id="dynamicInput">
-                      Entry 1<br><input type="text" name="myInputs[]">
-                 </div>
-                 <input type="button" value="Add another text input" onClick="addInput('dynamicInput');">
 
-            </div>
+                <div id="dynamicInput">
+                <div class="short-input">
+                  <label for="businessPhone">Work Phone</label>
+                  <div class="double-short-input">
+                    <input type="tel"> <div class="line-left"></div> <input placeholder="ext" type="tel" name="myInputs[]"> <div class="line-left"></div>
+                   </div>
+                    <!-- Entry 1<br><input type="text" name="myInputs[]"> -->
+                </div>
+                <input class="input-button" type="button" value="+Add another number" onClick="addInput('dynamicInput');"> <div class="line-left"></div>
+                </div>
           <div>
           </div>
         </fieldset>
@@ -63,20 +69,20 @@
         <fieldset style="margin-top: 49px;">
           <div class="flex-fields">
             <div class="first-div long-input">
-              <label for="Address1">Address</label> <input type="text" id="address">
-              <label for="Address2">Address line 2</label> <input type="text" id="address">
-              <label for="city">City</label> <input type="text" id="city">
+              <label for="Address1">Address</label> <input type="text" id="address"> <div class="line-left"></div>
+              <label for="Address2">Address line 2</label> <input type="text" id="address"> <div class="line-left"></div>
+              <label for="city">City</label> <input type="text" id="city"> <div class="line-left"></div>
             </div>
             <div class="short-input">
               <label for="Address Type"> Address Type </label>
-              <select name="Address Type">
+              <select name="Address Type"> <div class="line-left"></div>
                 <option value="billing">Billing</option>
                 <option value="home">Home</option>
                 <option value="Main">Main</option>
                 <option value="Work">Work</option>
               </select>
               <label for="Country"> Country </label>
-              <select name="Country">
+              <select name="Country"> <div class="line-left"></div>
                 <option value="USA">United States</option>
                 <option value="Canada">Canada</option>
                 <option value="Mexico">Mexico</option>
@@ -84,10 +90,10 @@
               </select>
               <div class="double-short-input">
                 <div class="double-long">
-                  <label for="state">State</label> <input type="text" id="state">
+                  <label for="state">State</label> <input type="text" id="state"> <div class="line-left"></div>
                 </div>
                 <div class="double-short">
-                  <label for="zip">Postal Code</label> <input type="text" id="zip">
+                  <label for="zip">Postal Code</label> <input type="text" id="zip"> <div class="line-left"></div>
                 </div>
               </div>
             </div>
@@ -97,6 +103,8 @@
         <button type="submit"> update </button>
 
       </div>
+
+    </div>
     </form>
 
 

@@ -13,15 +13,13 @@ h1{
 }
 
 form{
-
   margin: 0 auto;
+  max-width: 1200px;
 }
 
 .form{
   background: white;
   border-radius: 10px;
-  padding: 5% 10%;
-  width: fit-content;
   margin: 0 auto;
 }
 
@@ -42,16 +40,6 @@ abbr{
   color: #A1A1A1;
   text-decoration: none;
   padding-left: 3px;
-}
-
-input, select{
-  border: none;
-  border-bottom: 1px solid #A1A1A1;
-  font-family: 'Inter UI', sans-serif;
-  font-size: 12pt;
-  color: #131313 !important;
-  margin-bottom: 49px;
-  display: block;
 }
 
 a{
@@ -83,9 +71,14 @@ button:hover{
 
 .header{
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  padding: 0% 10%;
+  background: #FB8404;
+  padding: 1% 10%;
+}
+
+.header h1{
+  color: white;
 }
 
 .header img{
@@ -93,25 +86,82 @@ button:hover{
   height: 36px;
 }
 
+.form-content{
+  padding: 5% 10%;
+  background: white;
+}
+
 .long-input input, select {
-  width: 341px;
+  width: 100%;
 }
 
 .short-input input, select {
   width: 227px;
 }
 
+
+
+.wrap {
+  margin-bottom: 49px;
+}
+
+.line-left{
+  background: #007EFF;
+  height:1px;
+  margin-bottom: 49px;
+}
+
+.line-left {
+  width: 0;
+  transition: width .5s ease;
+}
+
+input:focus + .line-left{
+  width: 100%;
+  transition: width .5s ease;
+}
+
+input, select{
+  border: none;
+  font-family: 'Inter UI', sans-serif;
+  font-size: 12pt;
+  color: #131313 !important;
+  border-bottom: 1px solid #A1A1A1;
+  background: transparent;
+
+}
+
 input:focus, select:focus{
   outline: none;
-  border-bottom: 1px solid #007eff;
+}
+
+.input-button{
+  color: #007EFF !important;
+  text-decoration: none;
+  opacity: 1;
+  transition: all 0.2s ease;
+  background-color: transparent;
+  border-bottom: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.input-button:hover{
+  opacity: 0.8;
+}
+
+.input-button:focus, .input-button:active{
+  border-bottom: none;
 }
 
 .flex-fields{
   display: flex;
+  justify-content: space-between;
 }
 
 .first-div{
   margin-right:66px;
+  width: 100%;
 }
 
 .double-short-input{
