@@ -96,8 +96,7 @@ fieldset div {
 }
 
 .header{
-  border-left:5px solid #FB8404;
-  padding: 4%;
+  padding: 6% 4% 0% 4%;
 }
 
 .header h1{
@@ -105,6 +104,7 @@ fieldset div {
   font-weight: 700;
   font-size: 18pt;
   margin: 0;
+  text-align: center;
 }
 
 .logo{
