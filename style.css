@@ -23,7 +23,6 @@ form{
 
 .form{
   background: white;
-  border-radius: 10px;
   margin: 0 auto;
 }
 
@@ -46,14 +45,14 @@ input, select{
 
 input[type='email'] {
   background-image: url(email.png);
-  background-position: 7px 7px;
+  background-position: 7px 11px;
   background-repeat: no-repeat;
   text-indent: 32px;
 }
 
 input[type='tel'] {
   background-image: url(tel.png);
-  background-position: 7px 5px;
+  background-position: 7px 8px;
   background-repeat: no-repeat;
   text-indent: 32px;
 }
@@ -96,15 +95,14 @@ fieldset div {
 }
 
 .header{
-  background: #FB8404;
+  border-left:5px solid #FB8404;
   padding: 4%;
-  text-align: center;
 }
 
 .header h1{
-  color: white;
-  font-weight: 500;
-  font-size: 16pt;
+  color: #444 ;
+  font-weight: 700;
+  font-size: 18pt;
   margin: 0;
 }
 
@@ -117,7 +115,6 @@ fieldset div {
   display: flex;
   align-items: center;
   margin-left: 0px;
-  justify-content: center;
   margin-bottom: 6px;
 }
 
@@ -140,9 +137,8 @@ fieldset div {
 
 .line-left{
   background: #007EFF;
-  height:2px;
+  height:1px;
   margin-bottom: 39px;
-  margin-top: -2px;
 }
 
 .line-left {
@@ -164,8 +160,10 @@ input, select{
   font-family: 'Inter UI', sans-serif;
   font-size: 12pt;
   color: #131313 !important;
-  border-bottom: 1px solid #A1A1A1;
-  background: transparent;
+  border-bottom: 1px solid #dadada;
+  background: #f2f2f2;
+  text-indent: 5px;
+  padding: 5px 0px;
 }
 
 input:focus, select:focus{
