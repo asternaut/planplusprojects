@@ -10,12 +10,11 @@
   <body>
 
     <form method="POST">
-
+      <img class="logo" src="logo-plan-plus.png">
       <div class="form">
 
         <div class="header">
-          <h1> Update Your Contact Information </h1>
-          <img src="logo-plan-plus.png">
+          <h1> Update your contact information </h1>
         </div>
 
         <div class="form-content">
@@ -26,6 +25,7 @@
 
         <fieldset>
           <div class="flex-fields">
+            <h3> Personal Info </h3>
             <div class="name-info long-input first-div">
               <label for="first">First Name<abbr title="required">*</abbr></label>
               <input  placeholder="Keith" type="text" id="first"> <div class="line-left"></div>
@@ -43,14 +43,15 @@
         </fieldset>
 
         <fieldset>
+          <h3> Contact </h3>
           <div class="flex-fields">
             <div class="first-div long-input">
-              <label for="email">Email</label><input type="email" id="mail" name="usermail"> <div class="line-left"></div>
+              <label for="email">Email</label><input type="email" id="mail" name="usermail"> <div class="line-left shrinkM-underline"></div>
                 <input class="input-button" type="button" value="+Add another email">
             </div>
-            <div class="short-input">
+            <div class="long-input">
               <label for="businessPhone">Work Phone</label>
-                <input type="tel"> <div class="line-left"></div>
+                <input type="tel"> <div class="line-left shrinkM-underline"></div>
 
               <script src="add-input.js" language="Javascript" type="text/javascript"></script>
 
@@ -70,11 +71,7 @@
 
         <fieldset>
           <div class="flex-fields">
-            <div class="first-div long-input">
-              <label for="Address1">Address</label> <input type="text" id="address"> <div class="line-left"></div>
-              <label for="Address2">Address line 2</label> <input type="text" id="address"> <div class="line-left"></div>
-              <label for="city">City</label> <input type="text" id="city"> <div class="line-left"></div>
-            </div>
+            <h3> Address</h3>
             <div class="short-input">
               <label for="Address Type"> Address Type </label>
               <select name="Address Type">
@@ -83,13 +80,13 @@
                 <option value="Main">Main</option>
                 <option value="Work">Work</option>
               </select> <div class="line-left"></div>
-              <label for="Country"> Country </label>
-              <select name="Country">
-                <option value="USA">United States</option>
-                <option value="Canada">Canada</option>
-                <option value="Mexico">Mexico</option>
-                <option value="US Virgin Islands">US Virgin Islands</option>
-              </select>  <div class="line-left"></div>
+            </div>
+            <div class="first-div long-input">
+              <label for="Address1">Address</label> <input type="text" id="address"> <div class="line-left"></div>
+              <label for="Address2">Address line 2</label> <input type="text" id="address"> <div class="line-left"></div>
+              <label for="city">City</label> <input type="text" id="city"> <div class="line-left"></div>
+            </div>
+
               <div class="double-short-input">
                 <div class="double-long">
                   <label for="state">State</label> <input type="text" id="state"> <div class="line-left"></div>
@@ -98,6 +95,15 @@
                   <label for="zip">Postal Code</label> <input type="text" id="zip"> <div class="line-left"></div>
                 </div>
               </div>
+
+              <div class="short-input">
+                <label for="Country"> Country </label>
+                <select name="Country">
+                  <option value="USA">United States</option>
+                  <option value="Canada">Canada</option>
+                  <option value="Mexico">Mexico</option>
+                  <option value="US Virgin Islands">US Virgin Islands</option>
+                </select>  <div class="line-left"></div>
             </div>
           </div>
         </fieldset>
