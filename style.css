@@ -49,7 +49,7 @@ input[type='email'] {
 
 input[type='tel'] {
   background-image: url(tel.png);
-  background-position: 7px 7px;
+  background-position: 7px 5px;
   background-repeat: no-repeat;
   text-indent: 32px;
 }
@@ -85,6 +85,18 @@ button{
 
 button:hover{
   background:#FF6F00;
+}
+
+.svg{
+  width: 18px
+}
+
+.link-svg{
+  fill: #007EFF;
+}
+
+.link-svg:hover{
+  cursor: pointer;
 }
 
 .header{
@@ -228,4 +240,28 @@ select option {
 
 .double-short input{
   width: 95px !important;
+}
+
+
+@media (max-width: 850px){
+.person-to-update {
+  display: flex;
+  align-items: center;
+  margin-left: 0px;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+  .flex-fields{
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .first-div{
+    margin-right: 0px;
+  }
+
+  .job-info, .short-input, .short-input input, select{
+    width: 100%;
+  }
 }

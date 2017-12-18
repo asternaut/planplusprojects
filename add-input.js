@@ -11,3 +11,5 @@ function addInput(divName){
           counter++;
      }
 }
+
+$('.svg-inject').svgInject();
