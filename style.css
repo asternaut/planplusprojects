@@ -41,17 +41,17 @@ label{
 }
 
 input[type='email'] {
-    background-image: url(email.png);
-    background-position: 7px 7px;
-    background-repeat: no-repeat;
-    padding-left: 35px;
+  background-image: url(email.png);
+  background-position: 7px 7px;
+  background-repeat: no-repeat;
+  text-indent: 32px;
 }
 
 input[type='tel'] {
-    background-image: url(tel.png);
-    background-position: 7px 7px;
-    background-repeat: no-repeat;
-    padding-left: 35px;
+  background-image: url(tel.png);
+  background-position: 7px 7px;
+  background-repeat: no-repeat;
+  text-indent: 32px;
 }
 
 abbr{
@@ -139,8 +139,9 @@ button:hover{
 
 .line-left{
   background: #007EFF;
-  height:1px;
+  height:2px;
   margin-bottom: 49px;
+  margin-top: -2px;
 }
 
 .line-left {
@@ -148,7 +149,7 @@ button:hover{
   transition: width .5s ease;
 }
 
-input:focus + .line-left{
+select:focus + .line-left, input:focus + .line-left{
   width: 100%;
   transition: width .5s ease;
 }
@@ -160,10 +161,16 @@ input, select{
   color: #131313 !important;
   border-bottom: 1px solid #A1A1A1;
   background: transparent;
-
 }
 
 input:focus, select:focus{
+  outline: none;
+  border-bottom: 1px solid #007eff;
+   transition-delay: 0.5s;
+}
+
+select option {
+  border: none;
   outline: none;
 }
 
@@ -176,6 +183,7 @@ input:focus, select:focus{
   border-bottom: none;
   text-align: left;
   cursor: pointer;
+  padding-bottom: 49px;
 }
 
 .input-button:hover{
@@ -210,9 +218,12 @@ input:focus, select:focus{
   width: 60px;
 }
 
+.double-long{
+  margin-right: 14px;
+}
+
 .double-long input{
   width: 120px !important;
-  margin-right: 14px;
 }
 
 .double-short input{
