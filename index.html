@@ -8,13 +8,16 @@
     <script src="script.js"></script>
   </head>
   <body>
+    <div class="top-bar">
+      <img src="website_planplus_logo1.png">
+      <a href="#"> Sign up for PlanPlus </a>
+    </div>
 
     <form method="POST">
-      <img class="logo" src="logo-plan-plus.png">
       <div class="form">
 
         <div class="header">
-          <h1> Update your contact information </h1>
+            <h1> Update your contact information </h1>
         </div>
 
         <div class="form-content">
@@ -24,7 +27,7 @@
           </div> -->
 
         <fieldset>
-          <div class="flex-fields">
+          <div>
             <h3> Personal Info </h3>
             <div class="name-info long-input first-div">
               <label for="first">First Name<abbr title="required">*</abbr></label>
@@ -44,35 +47,28 @@
 
         <fieldset>
           <h3> Contact</h3>
-          <div class="flex-fields">
-            <div class="first-div long-input">
+          <div >
+            <div class="first-div">
               <label for="email">Email</label><input type="email" id="mail" name="usermail"> <div class="line-left shrinkM-underline"></div>
                 <input class="input-button" type="button" value="+Add another email">
             </div>
-            <div class="long-input">
+            <div class="short">
               <label for="businessPhone">Work Phone</label>
                 <input type="tel"> <div class="line-left shrinkM-underline"></div>
 
               <script src="add-input.js" language="Javascript" type="text/javascript"></script>
 
                 <div id="dynamicInput">
-              <!--   <div class="short-input">
-                  <label for="businessPhone">Work Phone</label>
-                  <div class="double-short-input">
-                    <input type="tel"> <div class="line-left"></div> <input placeholder="ext" type="tel" name="myInputs[]"> <div class="line-left"></div>
-                   </div>
-                    Entry 1<br><input type="text" name="myInputs[]">
-                </div> -->
-                <input class="input-button" type="button" value="+Add another number" onClick="addInput('dynamicInput');">
+                <input class="input-button" type="button" value="+Add another number">
                 </div>
           <div>
           </div>
         </fieldset>
 
         <fieldset>
-          <div class="flex-fields">
+          <div>
             <h3> Company Info</h3>
-            <div class="short-input">
+            <div class="short-input short">
               <label for="Address Type"> Address Type </label>
               <select name="Address Type">
                 <option value="billing">Billing</option>
@@ -81,40 +77,98 @@
                 <option value="Work">Work</option>
               </select> <div class="line-left"></div>
             </div>
-            <div class="first-div long-input">
+            <div class="first-div">
               <label for="Address1">Address</label> <input type="text" id="address"> <div class="line-left"></div>
               <label for="Address2">Address line 2</label> <input type="text" id="address"> <div class="line-left"></div>
               <label for="city">City</label> <input type="text" id="city"> <div class="line-left"></div>
             </div>
 
-              <div class="double-short-input">
-                <div class="double-long">
-                  <label for="state">State</label> <input type="text" id="state"> <div class="line-left"></div>
+              <div class="short flex-fields">
+                <div>
+                  <label for="state">State</label>
+                  <select id="State">
+                    <option value="AL">AL</option>
+                  	<option value="AK">AK</option>
+                  	<option value="AR">AR</option>
+                  	<option value="AZ">AZ</option>
+                  	<option value="CA">CA</option>
+                  	<option value="CO">CO</option>
+                  	<option value="CT">CT</option>
+                  	<option value="DC">DC</option>
+                  	<option value="DE">DE</option>
+                  	<option value="FL">FL</option>
+                  	<option value="GA">GA</option>
+                  	<option value="HI">HI</option>
+                  	<option value="IA">IA</option>
+                  	<option value="ID">ID</option>
+                  	<option value="IL">IL</option>
+                  	<option value="IN">IN</option>
+                  	<option value="KS">KS</option>
+                  	<option value="KY">KY</option>
+                  	<option value="LA">LA</option>
+                  	<option value="MA">MA</option>
+                  	<option value="MD">MD</option>
+                  	<option value="ME">ME</option>
+                  	<option value="MI">MI</option>
+                  	<option value="MN">MN</option>
+                  	<option value="MO">MO</option>
+                  	<option value="MS">MS</option>
+                  	<option value="MT">MT</option>
+                  	<option value="NC">NC</option>
+                  	<option value="NE">NE</option>
+                  	<option value="NH">NH</option>
+                  	<option value="NJ">NJ</option>
+                  	<option value="NM">NM</option>
+                  	<option value="NV">NV</option>
+                  	<option value="NY">NY</option>
+                  	<option value="ND">ND</option>
+                  	<option value="OH">OH</option>
+                  	<option value="OK">OK</option>
+                  	<option value="OR">OR</option>
+                  	<option value="PA">PA</option>
+                  	<option value="RI">RI</option>
+                  	<option value="SC">SC</option>
+                  	<option value="SD">SD</option>
+                  	<option value="TN">TN</option>
+                  	<option value="TX">TX</option>
+                  	<option value="UT">UT</option>
+                  	<option value="VT">VT</option>
+                  	<option value="VA">VA</option>
+                  	<option value="WA">WA</option>
+                  	<option value="WI">WI</option>
+                  	<option value="WV">WV</option>
+                  	<option value="WY">WY</option>
+                  </select>
+                  <div class="line-left"></div>
                 </div>
-                <div class="double-short">
-                  <label for="zip">Postal Code</label> <input type="text" id="zip"> <div class="line-left"></div>
+                <div>
+                  <label for="zip">Postal Code</label> <input type="text" id="zip" onkeypress='validate(event)'> <div class="line-left"></div>
                 </div>
               </div>
 
-              <div class="short-input">
+              <div class="short-input short">
                 <label for="Country"> Country </label>
-                <select name="Country">
+                <select id="Country">
                   <option value="USA">United States</option>
                   <option value="Canada">Canada</option>
                   <option value="Mexico">Mexico</option>
                   <option value="US Virgin Islands">US Virgin Islands</option>
-                </select>  <div class="line-left"></div>
+                </select>  <div class="line-left shrinkM-underline"></div>
             </div>
           </div>
+            <input class="input-button" type="button" value="+Add another address" onClick="addInput('dynamicInput');">
         </fieldset>
 
-        <button type="submit"> update </button>
+        <button type="submit"> Update </button>
 
       </div>
 
     </div>
     </form>
 
+    <div class="sign-up-CTA">
+      <a href="#"> Get your own PlanPlus account </a>
+    </div>
 
   </body>
 
