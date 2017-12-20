@@ -190,7 +190,7 @@ input, select{
   border: none;
   font-family: 'Inter UI', sans-serif;
   font-size: 12pt;
-  color: #131313 !important;
+  color: #444 !important;
   border-bottom: 1px solid #dadada;
   background: #f2f2f2;
   text-indent: 5px;
@@ -255,7 +255,20 @@ select option {
 
 .sign-up-CTA a{
   cursor: pointer;
+}
 
+.success-message{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 75vh;
+  text-align: center;
+  color: #656565;
+}
+
+.success-message img{
+  margin: 0 auto;
+  display: block;
 }
 
 
@@ -285,6 +298,10 @@ select option {
 @media (max-width: 700px){
   form{
     padding: 10% 5%;
+  }
+
+  .top-bar *{
+    padding: 8px 18px;
   }
 
   .header h1{
