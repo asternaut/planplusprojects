@@ -1,27 +1,21 @@
-var counter = 1;
-var limit = 3;
-function addInput(divName){
-     if (counter == limit)  {
-          alert("You have reached the limit of adding " + counter + " inputs");
-     }
-     else {
-          var newdiv = document.createElement('div');
-          newdiv.innerHTML = "New Number " + (counter + 1) + " <br><input type='text' name='myInputs[]'>";
-          document.getElementById(divName).appendChild(newdiv);
-          counter++;
-     }
+function showEmail() {
+    input = document.getElementById('showE');
+    input.style.display = "block";
 }
 
-$('.svg-inject').svgInject();
-
-
-function validate(evt) {
-  var theEvent = evt || window.event;
-  var key = theEvent.keyCode || theEvent.which;
-  key = String.fromCharCode( key );
-  var regex = /[0-9]|\./;
-  if( !regex.test(key) ) {
-    theEvent.returnValue = false;
-    if(theEvent.preventDefault) theEvent.preventDefault();
-  }
+function showTel() {
+    input = document.getElementById('showTSelect');
+    input.style.display = "block";
 }
+
+$(document).ready(function () {
+    $("#telNumber").change(function () {
+        $("#area").append("<div><input class='field' type='tel' value='" + $(this).val() + "'/><span class='remove'> <strong> -</strong></span></div>");
+        $(this).find("option:selected").remove();
+    });
+    $("#area").on("click", ".remove", function () {
+        var val = $(this).parent().find("input").val();
+        $("#telNumber").append("<option value='" + val + "'>" + val + "</option>");
+        $(this).parent().remove();
+    });
+});

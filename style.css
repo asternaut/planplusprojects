@@ -144,19 +144,6 @@ fieldset div {
   height: 36px;
 }
 
-.person-to-update{
-  display: flex;
-  align-items: center;
-  margin-left: 0px;
-  margin-bottom: 6px;
-}
-
-.person-to-update img{
-  width: 50px;
-  height: 50px;
-  padding-right: 20px;
-}
-
 .form-content{
   padding: 5% 10%;
   background: white;
@@ -182,6 +169,49 @@ select:focus + .line-left, input:focus + .line-left{
   transition: width .5s ease;
 }
 
+/*VALIDATION ERROR STYLING*/
+.v-error{
+  color: tomato !important;
+}
+
+.v-error em{
+  font-size: 10pt;
+}
+
+.error-line{
+  transition: 0.2s ease;
+  background: tomato !important;
+}
+
+.error-button{
+  opacity: 0.7 !important;
+  cursor: auto;
+}
+
+.error-button:hover{
+  background: #FB8404 !important;
+}
+
+.v-good{
+  background-image: url(email.png), url(green-check.png) !important;
+  background-position: 7px 11px, right !important;
+}
+
+.good-line{
+  transition: 0.2s ease;
+  background: mediumseagreen !important;
+}
+
+/* ADDING NEW FORM FIELDS */
+#showE{
+  display: none;
+}
+
+#showTSelect{
+  display: none;
+}
+
+
 .shrinkM-underline{
   margin-bottom: 10px !important;
 }
@@ -190,7 +220,7 @@ input, select{
   border: none;
   font-family: 'Inter UI', sans-serif;
   font-size: 12pt;
-  color: #444 !important;
+  color: #444;
   border-bottom: 1px solid #dadada;
   background: #f2f2f2;
   text-indent: 5px;
@@ -217,7 +247,7 @@ select option {
   border-bottom: none;
   text-align: left;
   cursor: pointer;
-  padding-bottom: 49px;
+  margin-bottom: 49px;
 }
 
 .input-button:hover{
