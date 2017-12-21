@@ -20,7 +20,7 @@
 
         <fieldset>
           <div>
-            <h3> Validation </h3>
+            <h3> Validation & "Add Another" Function</h3>
             <div class="name-info long-input first-div">
               <!-- EXAMPLE OF VALIDATION ERROR
                 Notes on validation:
@@ -34,8 +34,12 @@
               <label for="email">Example Good</label>
               <input type="email" id="first" class="v-good"> <div class="line-left good-line shrinkM-underline"></div>
 
-              <input type="email" id="showE"> <div class="line-left shrinkM-underline"></div>
+              <div  id="showE" class="showE">
+                <input type="email"> <span class="remove"> <strong> - Remove</strong></span><div class="line-left shrinkM-underline"></div>
+              </div>
               <input onclick="javascript:showEmail();" class="input-button" type="button" value="+Add another email">
+
+              <!-- 📧 Lets allow up to 2 new emails  -->
 
 
 
@@ -59,6 +63,11 @@
                 </select> <div class="line-left"></div>
                 </div>
               </div>
+              <!-- The idea here is that when you click on an option an input displays below where you can add the new number. Example: http://jsfiddle.net/cqjJy/36/  -->
+
+              <!--📱 Allow as many new numbers as there are options -->
+              <!-- 🏢 Allow up to 3 new addresses -->
+
         </fieldset>
         <br/>
         <span class="v-error"> Oops! We found some errors. Please double-check your inputs. </span>
@@ -70,5 +79,13 @@
     </form>
     <script src="add-input.js" language="Javascript" type="text/javascript"></script>
   </body>
+
+<!--
+  SOME NOTES
+    - When user adds max new fields with the "add another ___" option, that button will disapear unless they remove a field
+    - Only required fields are First and Last Name. If they delete either, note with "This is a required field"
+    - Make sure to give a "remove" option for all new fields
+  -->
+
 
 </html>

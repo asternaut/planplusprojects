@@ -207,6 +207,24 @@ select:focus + .line-left, input:focus + .line-left{
   display: none;
 }
 
+.showE input{
+  width: 86%;
+}
+
+.remove{
+  padding-left: 10px;
+    font-size: 10pt;
+    color: #444;
+    cursor: pointer;
+    opacity:1;
+    transition: 0.2s ease;
+}
+
+.remove:hover{
+  opacity: 0.8;
+}
+
+
 #showTSelect{
   display: none;
 }
@@ -337,6 +355,10 @@ select option {
   .header h1{
     font-size:16pt;
   }
+
+  .showE input {
+    width: 100%;
+}
 
   .sign-up-CTA{
     margin: 0% 0 7% 0;
