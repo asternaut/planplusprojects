@@ -1,0 +1,785 @@
+/**
+ * Copyright 2005 Darren L. Spurgeon
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * -----
+ *
+ * liveUpdater function and other portions copyright by:
+ * Copyright 2004 Leslie A. Hensley (hensleyl@papermountain.org)
+ *   you have a license to do what ever you like with this code
+ *   orginally from Avai Bryant
+ *   http://www.cincomsmalltalk.com/userblogs/avi/blogView?entry=3268075684
+ */
+ 
+var isSafari = false;
+var isMoz = false;
+var isIE = false;
+
+if (navigator.userAgent.indexOf("Safari") > 0) {
+  isSafari = true;
+  isMoz = false;
+  isIE = false;
+}
+else if (navigator.product == "Gecko") {
+  isSafari = false;
+  isMoz = true;
+  isIE = false;
+}
+else {
+  isSafari = false;
+  isMoz = false;
+  isIE = true;
+}
+
+//
+// GLOBAL FUNCTIONS
+//
+
+/* Functions to handle browser incompatibilites */
+function eventElement(event) {
+  if (isMoz) {
+    return event.currentTarget;
+  } else {
+    return event.srcElement;
+  }
+}
+
+function addKeyListener(element, listener) {
+  if (isSafari)
+    element.addEventListener("keydown",listener,false);
+  else if (isMoz)
+    element.addEventListener("keypress",listener,false);
+  else
+    element.attachEvent("onkeydown",listener);
+}
+
+function addListener(element, type, listener) {
+  if (element.addEventListener) {
+    element.addEventListener(type, listener, false);
+  } else {
+    element.attachEvent('on' + type, listener);
+  }
+}
+
+function removeListener(element, type, listener) {
+  if (element.removeEventListener) {
+    element.removeEventListener(type, listener, false);
+  } else {
+    element.detachEvent('on' + type, listener);
+  }
+}
+
+/* XML Helper functions */
+function trim(s) {
+  while (s.substring(0,1) == ' ') {
+    s = s.substring(1,s.length);
+  }
+  while (s.substring(s.length-1,s.length) == ' ') {
+    s = s.substring(0,s.length-1);
+  }
+  return s;
+}
+
+function flatten(node) {
+  if (node.nodeType == 1) {
+    return '<' + node.nodeName + flattenAttributes(node) + '>' +
+    flattenChildren(node.childNodes) + '</' + node.nodeName + '>';
+  } else if(node.nodeType == 3) {
+    return trim(node.nodeValue);
+  }
+}
+
+function flattenAttributes(node) {
+  var buffer = '';
+  for (var i=0;i<node.attributes.length;i++) {
+    var attribute = node.attributes[i];
+    buffer += ' '+ attribute.name + '="' + attribute.value + '"';
+  }
+  return buffer;
+}
+
+function flattenChildren(nodes) {
+  var buffer = '';
+  if (nodes.length > 0) {
+    for (var i=0;i<nodes.length;i++) {
+      buffer += flatten(nodes[i]);
+    }
+  }
+  return buffer;
+}
+
+
+//
+// LIVE UPDATE CORE
+//
+/*
+  liveUpdater returns the live update function to use
+  uriFunc: The function to generate the uri
+  postFunc: <optional> Function to run after processing is complete
+  preFunc: <optional> Function to run before processing starts
+*/
+function liveUpdater(uriFunc, handlerFunc, preFunc, emptyFunc, errorFunc) {
+  if (!handlerFunc) handlerFunc = function() {};
+  if (!preFunc) preFunc = function () {};
+  if (!emptyFunc) emptyFunc = function () {};
+  if (!errorFunc) errorFunc = function () {};
+
+  return createLiveUpdaterFunction(uriFunc, handlerFunc, preFunc, emptyFunc, errorFunc);
+}
+
+function createLiveUpdaterFunction(uriFunc, handlerFunc, preFunc, emptyFunc, errorFunc) {
+
+    function update() {
+      preFunc();
+      postXmlHttp( uriFunc(), wrapHandlerFunc );
+    }
+
+    function wrapHandlerFunc() {
+      var xmlDoc = _xmlHttpRequestObj.responseXML;
+      handlerFunc(xmlDoc);
+    }
+
+    return update;
+}
+
+
+//
+// AUTOCOMPLETE
+//
+function autocomplete(id, popupId, uri, paramName, postFunc, formName, minimumCharacters) {
+
+  var inputField = document.getElementById(id);
+  var popup = document.getElementById(popupId);
+  if (!postFunc) postFunc = function () {};
+  if (minimumCharacters == null || minimumCharacters == "null") minimumCharacters = 2;
+  var items = new Array();
+  var current = 0;
+  var originalPopupTop = popup.offsetTop;
+  var _formName = formName;
+
+  function constructUri() {
+    var separator = "?";
+    if (uri.indexOf("?") >= 0)
+        separator = "&";
+    return uri + separator + paramName + "=" + escape(inputField.value);
+  }
+
+  function hidePopup() {
+    popup.style.visibility = 'hidden';
+    popup.style.display = 'none';
+    adjustiFrame( popup );
+  }
+
+  function handlePopupOver() {
+    removeListener(inputField, 'blur', hidePopup);
+  }
+
+  function handlePopupOut() {
+    if (popup.style.visibility == 'visible') {
+      addListener(inputField, 'blur', hidePopup);
+    }
+  }
+
+  function populateHiddenValue( tgtObj )
+  {
+    if ( _formName == 'createOpp' )
+    {
+      var custType = tgtObj.getAttribute("type");
+      if ( custType == 'ORG' )
+      {
+        document.forms['createOpp'].elements['customerId'].value = tgtObj.getAttribute("id");
+        if ( document.forms['createOpp'].elements['org_and_contact'].value=='N' )
+          document.forms['createOpp'].elements['contactId'].value  = '-1';
+      }
+      else
+      {
+        if ( document.forms['createOpp'].elements['org_and_contact'].value=='N' )
+          document.forms['createOpp'].elements['customerId'].value = '-1';
+        document.forms['createOpp'].elements['contactId'].value  = tgtObj.getAttribute("id");
+      }
+    }
+    else if ( _formName == 'createContact' )
+    {
+        document.forms['createForm'].elements['customerId'].value = tgtObj.getAttribute("id");
+    }
+    else if ( _formName == 'LOVCreateContact' )
+    {
+        document.forms['createForm'].elements['custID'].value = tgtObj.getAttribute("id");
+    }
+    else if ( _formName == 'quickContact' )
+    {
+        document.forms['quickContact'].elements['companyid'].value = tgtObj.getAttribute("id");
+    }
+    else if ( _formName == 'createCase' )
+    {
+        document.forms['createCase'].elements['contactId'].value = tgtObj.getAttribute("id");
+        if ( document.forms['createCase'].elements['customerId'].value <= 0 )
+          document.forms['createCase'].elements['customerId'].value = tgtObj.getAttribute("orgid");
+        document.forms['createCase'].elements['customerName'].value = tgtObj.getAttribute("orgname");
+    }
+    else if ( _formName == 'createForm' )
+    {
+        document.forms['createForm'].elements['zip'].value = tgtObj.getAttribute("postalcode");
+        document.forms['createForm'].elements['city'].value = tgtObj.getAttribute("city");
+        document.forms['createForm'].elements['state'].value = tgtObj.getAttribute("state");
+        document.forms['createForm'].elements['county'].value = tgtObj.getAttribute("county");
+    }
+    else if ( _formName == 'inlinePopupCreateForm' )
+    {
+      $(_formName+'_zip').value = tgtObj.getAttribute("postalcode");
+      $(_formName+'_city').value = tgtObj.getAttribute("city");
+      $(_formName+'_state').value = tgtObj.getAttribute("state");
+      $(_formName+'_county').value = tgtObj.getAttribute("county");
+    }
+    else if ( _formName == 'inlinePopupCreateFormOpp' )
+    {
+      var _end = '';
+      if ( id == 'ajaxnewopp_prodName_0' ) _end = '_0';
+      if ( id == 'ajaxnewopp_prodName_1' ) _end = '_1';
+      if ( id == 'ajaxnewopp_prodName_2' ) _end = '_2';
+      if ( id == 'ajaxnewopp_prodName_3' ) _end = '_3';
+      if ( id == 'ajaxnewopp_prodName_4' ) _end = '_4';
+      
+      $( 'ajaxnewopp_prdCatId'+_end ).value = tgtObj.getAttribute("prdcatid");
+      $( 'ajaxnewopp_prdId'+_end ).value = tgtObj.getAttribute("prdid");
+      $( 'ajaxnewopp_price'+_end ).value = tgtObj.getAttribute("price");
+      var price = tgtObj.getAttribute("price");
+      var qty = 1.0 * $( 'ajaxnewopp_qty'+_end ).value;
+      if ( qty == 1.0 || qty == 0.0 )
+      {
+        $( 'ajaxnewopp_qty'+_end ).value = '1';
+        $( 'ajaxnewopp_amt'+_end ).value = price;
+      }
+      else
+      {
+        $( 'ajaxnewopp_amt'+_end ).value = qty * price;
+      }
+    }
+    else if ( _formName == 'addProduct' )
+    {
+      document.addProduct.elements['prdCatId'].value = tgtObj.getAttribute("prdcatid");
+      document.addProduct.elements['prdId'].value = tgtObj.getAttribute("prdid");
+      document.addProduct.elements['price'].value = tgtObj.getAttribute("price");
+      var price = tgtObj.getAttribute("price");
+      var qty = 1.0 * document.addProduct.elements['qty'].value;
+      if ( qty == 1.0 || qty == 0.0 )
+      {
+        document.addProduct.elements['qty'].value = '1';
+        document.addProduct.elements['amt'].value = price;
+      }
+      else
+      {
+        document.addProduct.elements['amt'].value = qty * price;
+      }
+    }
+    else if ( _formName == 'createOppProduct' )
+    {
+      var _end = '';
+      if ( id == 'prodName_0' ) _end = '_0';
+      if ( id == 'prodName_1' ) _end = '_1';
+      if ( id == 'prodName_2' ) _end = '_2';
+      if ( id == 'prodName_3' ) _end = '_3';
+      if ( id == 'prodName_4' ) _end = '_4';
+      
+      document.createOpp.elements['prdCatId'+_end].value = tgtObj.getAttribute("prdcatid");
+      document.createOpp.elements['prdId'+_end].value = tgtObj.getAttribute("prdid");
+      document.createOpp.elements['price'+_end].value = tgtObj.getAttribute("price");
+      var price = tgtObj.getAttribute("price");
+      var qty = 1.0 * document.createOpp.elements['qty'+_end].value;
+      if ( qty == 1.0 || qty == 0.0 )
+      {
+        document.createOpp.elements['qty'+_end].value = '1';
+        document.createOpp.elements['amt'+_end].value = price;
+      }
+      else
+      {
+        document.createOpp.elements['amt'+_end].value = qty * price;
+      }
+    }
+    else if ( _formName == 'storeSectionForm' )
+    {
+      var _end = id.substring(8);  // if ( id == 'prodName_0' ) _end = '_0';
+
+      document.storeSectionForm.elements['prdCatId'+_end].value = tgtObj.getAttribute("prdcatid");
+      document.storeSectionForm.elements['prdId'+_end].value = tgtObj.getAttribute("prdid");
+      document.storeSectionForm.elements['price'+_end].value = tgtObj.getAttribute("price");
+    }
+    else if ( _formName == 'genFormACOrg' || _formName == 'genFormACOrg_ACHook' )
+    {
+      $('customerId').value = tgtObj.getAttribute("id");
+      if ( _formName == 'genFormACOrg_ACHook' )
+      {
+        try { genFormACOrg_ACHook(); } catch (Exception) {}
+      }
+    }
+    else if ( _formName == 'newTransaction' )
+    {
+      $('accountId').value = tgtObj.getAttribute("id");
+      try { genFormACOrg_ACHook(); } catch (Exception) {}
+    }
+    else if ( _formName == 'readyDrive' )
+    {
+      for (var i=0; i<16; i++)
+      {
+        if ( tgtObj.getAttribute('rdk_'+i) != null && tgtObj.getAttribute('rdk_'+i) != '' )
+        {
+          var fieldId    = tgtObj.getAttribute('rdk_'+i);
+          var fieldValue = tgtObj.getAttribute('rdv_'+i);
+          if ( document.createOpp.elements['CF_'+fieldId] != null )
+            document.createOpp.elements['CF_'+fieldId].value = fieldValue;
+        }
+      }
+    }
+    //ProjectID#10074::Porting EBsuite features to PlanPlus Online::Support Module for Internal Use 
+    else if (_formName == 'createNewSol') {
+        var _end = '';
+        if (id == 'prodName_0') _end = '_0';
+        if (id == 'prodName_1') _end = '_1';
+        if (id == 'prodName_2') _end = '_2';
+        if (id == 'prodName_3') _end = '_3';
+        if (id == 'prodName_4') _end = '_4';
+
+        document.createSol.elements['prdCatId' + _end].value = tgtObj.getAttribute("prdcatid");
+        document.createSol.elements['prdId' + _end].value = tgtObj.getAttribute("prdid");
+        document.createSol.elements['price' + _end].value = tgtObj.getAttribute("price");
+        var price = tgtObj.getAttribute("price");
+        var qty = 1.0 * document.createSol.elements['qty' + _end].value;
+        if (qty == 1.0 || qty == 0.0)
+        {
+            document.createSol.elements['qty' + _end].value = '1';
+            document.createSol.elements['amt' + _end].value = price;
+        }
+        else
+        {
+            document.createSol.elements['amt' + _end].value = qty * price;
+        }
+    }
+    //Task : delegate tab - whole workflow, including email, Project ID: 13498
+    else if ( _formName == 'updateTask' )
+    {
+      //  PPOL-1055 Delegation- add back ability to select a Contact email address 4:07 PM 8/16/2016
+      if(tgtObj.getAttribute("type") == 'PSN') {
+        document.forms['updateTask'].elements['usrid'].value = tgtObj.getAttribute("id");
+        console.log("PSN"+tgtObj.getAttribute("type"))
+      }
+      if(tgtObj.getAttribute("type") == 'PSN1') {
+        document.forms['updateTask'].elements['cnctid'].value = tgtObj.getAttribute("id");
+        console.log("PSN1"+tgtObj.getAttribute("type"))
+      } // PPOL-1055
+    }
+  }
+
+  function handleClick(e) {
+  //Task : delegate tab - whole workflow, including email, Project ID: 13498    
+  if(eventElement(e).innerHTML.indexOf('None Found')>-1 || eventElement(e).innerHTML.indexOf('Email External User')>-1)   //PPOL-1265
+  {
+  //inputField.value = '';
+  inputField.value = inputField.value ;    
+      
+  // document.getElementById('delegate_td').style.display='block';
+  // document.getElementById('expdate').style.display='block';
+  // document.getElementById('delegation_owner_options').style.display='block';
+
+  document.getElementById('delegateOptions').style.display = 'block';
+
+  //Task : delegate tab - whole workflow, including email, Project ID: 13498
+  document.getElementById('mailButton').innerHTML='Send Email';
+  document.getElementById('mailButton').className='btn-ppol blue';
+  // document.getElementById('mailButton').style.background='#20b3ea';
+  // document.getElementById('mailButton').style.color='#ffffff';
+  //document.getElementById('mailButton').setAttribute('onclick','delegate_proceed();');
+  document.getElementById('mailButton').onclick=function ()
+  {
+      delegate_proceed();
+  };
+  }
+  else{
+    // PPOL-904  Dynamically adding reference values from appt name
+      if(formName == "addContactRef")
+      {
+          inputField.value = inputField.value;
+          console.log(""+inputField.value);
+      }
+      //PPOL-2094  Search Bar
+      //if(formName!="addContactRef")
+      if(formName!="addContactRef" && formName!="mainSearch")
+      inputField.value = eventElement(e).innerHTML;
+     //Task : delegate tab - whole workflow, including email, Project ID: 13498
+      if (formName == 'updateTask') {
+      inputField.value = inputField.value;
+          // document.getElementById('delegate_td').style.display = 'block';
+          // document.getElementById('expdate').style.display = 'block';
+          // document.getElementById('delegation_owner_options').style.display = 'block';
+          document.getElementById('delegateOptions').style.display = 'block';
+          document.getElementById('mailButton').innerHTML = 'Delegate';
+          document.getElementById('mailButton').className = 'btn-ppol blue';
+          // document.getElementById('mailButton').style.background = '#20b3ea';
+          // document.getElementById('mailButton').style.color = '#ffffff';
+          //document.getElementById('mailButton').setAttribute('onclick','delegate_proceed();');
+          document.getElementById('mailButton').onclick = function ()
+          {
+              delegate_proceed();
+          };
+      }
+
+  }
+    populateHiddenValue( eventElement(e) );
+    popup.style.visibility = 'hidden';
+    popup.style.display = 'none';
+    adjustiFrame( popup );
+    inputField.focus();
+    postFunc();
+  }
+
+  function handleOver(e) {
+    if(formName!=='mainSearch')  {
+      items[current].className = '';
+      current = eventElement(e).index;
+      items[current].className = 'selected';
+    }
+  }
+
+  function handlerFunc(xmlDoc) {
+ 
+    if ( xmlDoc == null || xmlDoc.documentElement == null
+         || !xmlDoc.documentElement.hasChildNodes() || xmlDoc.firstChild.nodeName == "parsererror" )
+    {
+      hidePopup();
+      return;
+    }
+
+    var root = xmlDoc.documentElement;
+    if (root != null) {
+
+      var items = root.childNodes;
+
+      // Transform item tags to LI tags
+      var ul = xmlDoc.createElement("ul");
+      for (var i=0; i<items.length; i++) {
+        var li = xmlDoc.createElement("li");
+        var liIdAttr = xmlDoc.createAttribute("id");
+        var liText = xmlDoc.createTextNode(items[i].firstChild.nodeValue);
+        if ( items[i].getAttribute("nodeid") != null )     li.setAttribute("id", items[i].getAttribute("nodeid"));
+        if ( items[i].getAttribute("nodetype") != null )   li.setAttribute("type", items[i].getAttribute("nodetype"));
+        if ( items[i].getAttribute("orgid") != null )      li.setAttribute("orgid", items[i].getAttribute("orgid"));
+        if ( items[i].getAttribute("orgname") != null )    li.setAttribute("orgname", items[i].getAttribute("orgname"));
+        
+        if ( items[i].getAttribute("postalcode") != null ) li.setAttribute("postalcode", items[i].getAttribute("postalcode"));
+        if ( items[i].getAttribute("city") != null )       li.setAttribute("city", items[i].getAttribute("city"));
+        if ( items[i].getAttribute("state") != null )      li.setAttribute("state", items[i].getAttribute("state"));
+        if ( items[i].getAttribute("county") != null )     li.setAttribute("county", items[i].getAttribute("county"));
+
+        if ( items[i].getAttribute("prdcatid") != null )   li.setAttribute("prdcatid", items[i].getAttribute("prdcatid"));
+        if ( items[i].getAttribute("prdid") != null )      li.setAttribute("prdid", items[i].getAttribute("prdid"));
+        if ( items[i].getAttribute("price") != null )      li.setAttribute("price", items[i].getAttribute("price"));
+
+        if ( items[i].getAttribute("rdk_0") != null )      li.setAttribute("rdk_0", items[i].getAttribute("rdk_0"));
+        if ( items[i].getAttribute("rdv_0") != null )      li.setAttribute("rdv_0", items[i].getAttribute("rdv_0"));
+        if ( items[i].getAttribute("rdk_1") != null )      li.setAttribute("rdk_1", items[i].getAttribute("rdk_1"));
+        if ( items[i].getAttribute("rdv_1") != null )      li.setAttribute("rdv_1", items[i].getAttribute("rdv_1"));
+        if ( items[i].getAttribute("rdk_2") != null )      li.setAttribute("rdk_2", items[i].getAttribute("rdk_2"));
+        if ( items[i].getAttribute("rdv_2") != null )      li.setAttribute("rdv_2", items[i].getAttribute("rdv_2"));
+        if ( items[i].getAttribute("rdk_3") != null )      li.setAttribute("rdk_3", items[i].getAttribute("rdk_3"));
+        if ( items[i].getAttribute("rdv_3") != null )      li.setAttribute("rdv_3", items[i].getAttribute("rdv_3"));
+        if ( items[i].getAttribute("rdk_4") != null )      li.setAttribute("rdk_4", items[i].getAttribute("rdk_4"));
+        if ( items[i].getAttribute("rdv_4") != null )      li.setAttribute("rdv_4", items[i].getAttribute("rdv_4"));
+        if ( items[i].getAttribute("rdk_5") != null )      li.setAttribute("rdk_5", items[i].getAttribute("rdk_5"));
+        if ( items[i].getAttribute("rdv_5") != null )      li.setAttribute("rdv_5", items[i].getAttribute("rdv_5"));
+        if ( items[i].getAttribute("rdk_6") != null )      li.setAttribute("rdk_6", items[i].getAttribute("rdk_6"));
+        if ( items[i].getAttribute("rdv_6") != null )      li.setAttribute("rdv_6", items[i].getAttribute("rdv_6"));
+        if ( items[i].getAttribute("rdk_7") != null )      li.setAttribute("rdk_7", items[i].getAttribute("rdk_7"));
+        if ( items[i].getAttribute("rdv_7") != null )      li.setAttribute("rdv_7", items[i].getAttribute("rdv_7"));
+        if ( items[i].getAttribute("rdk_8") != null )      li.setAttribute("rdk_8", items[i].getAttribute("rdk_8"));
+        if ( items[i].getAttribute("rdv_8") != null )      li.setAttribute("rdv_8", items[i].getAttribute("rdv_8"));
+        if ( items[i].getAttribute("rdk_9") != null )      li.setAttribute("rdk_9", items[i].getAttribute("rdk_9"));
+        if ( items[i].getAttribute("rdv_9") != null )      li.setAttribute("rdv_9", items[i].getAttribute("rdv_9"));
+        if ( items[i].getAttribute("rdk_10") != null )      li.setAttribute("rdk_10", items[i].getAttribute("rdk_10"));
+        if ( items[i].getAttribute("rdv_10") != null )      li.setAttribute("rdv_10", items[i].getAttribute("rdv_10"));
+        if ( items[i].getAttribute("rdk_11") != null )      li.setAttribute("rdk_11", items[i].getAttribute("rdk_11"));
+        if ( items[i].getAttribute("rdv_11") != null )      li.setAttribute("rdv_11", items[i].getAttribute("rdv_11"));
+        if ( items[i].getAttribute("rdk_12") != null )      li.setAttribute("rdk_12", items[i].getAttribute("rdk_12"));
+        if ( items[i].getAttribute("rdv_12") != null )      li.setAttribute("rdv_12", items[i].getAttribute("rdv_12"));
+        if ( items[i].getAttribute("rdk_13") != null )      li.setAttribute("rdk_13", items[i].getAttribute("rdk_13"));
+        if ( items[i].getAttribute("rdv_13") != null )      li.setAttribute("rdv_13", items[i].getAttribute("rdv_13"));
+        if ( items[i].getAttribute("rdk_14") != null )      li.setAttribute("rdk_14", items[i].getAttribute("rdk_14"));
+        if ( items[i].getAttribute("rdv_14") != null )      li.setAttribute("rdv_14", items[i].getAttribute("rdv_14"));
+        if ( items[i].getAttribute("rdk_15") != null )      li.setAttribute("rdk_15", items[i].getAttribute("rdk_15"));
+        if ( items[i].getAttribute("rdv_15") != null )      li.setAttribute("rdv_16", items[i].getAttribute("rdv_15"));
+
+        li.appendChild(liText);
+        ul.appendChild(li);
+      }
+
+      // Remove item tags
+      for (var j=items.length-1; j>=0; j--) {
+        root.removeChild(root.childNodes[j]);
+      }
+
+      // Add UL tag
+      root.appendChild(ul);
+
+      // Set innerHTML for popup
+      document.getElementById(popupId).innerHTML = flattenChildren(root.childNodes);
+      setSelected();
+    }
+  }
+
+  function setSelected() {
+    current = 0;
+    items = popup.getElementsByTagName("li");
+    if ((items.length > 1) || (items.length == 1 && items[0].innerHTML != inputField.value))
+    {
+      setPopupStyles();
+      for (var i = 0; i < items.length; i++)
+      {
+        items[i].index = i;
+        addOptionHandlers(items[i]);
+      }
+      //Task : delegate tab - whole workflow, including email, Project ID: 13498
+        if(items[0].innerHTML.indexOf('None Found')>0) {
+          items[0].className = 'selected2';
+        } else {
+          if(formName!=='mainSearch') {
+            items[0].className = 'selected';
+          }
+        }
+    }
+    else
+    {
+      popup.style.visibility = 'hidden';
+      popup.style.display = 'none';
+      adjustiFrame( popup );
+    }
+
+    return null;
+  }
+
+  function empty() {
+    popup.style.visibility = 'hidden';
+    popup.style.display = 'none';
+    adjustiFrame( popup );
+  }
+
+  function setPopupStyles() {
+    var maxHeight
+    if (isIE) {
+      maxHeight = 200;
+    } else {
+      maxHeight = window.outerHeight/3;
+    }
+    if (popup.offsetHeight < maxHeight) {
+      popup.style.overflow = 'hidden';
+    } else if (isMoz) {
+      popup.style.maxHeight = maxHeight + 'px';
+      popup.style.overflow = '-moz-scrollbars-vertical';
+    } else {
+      popup.style.height = maxHeight + 'px';
+      popup.style.overflowY = 'auto';
+    }
+    popup.scrollTop = 0;
+
+    // Start playing
+//    popup.className = 'autocomplete';
+//    popup.style.position = 'static';
+    //Task : delegate tab - whole workflow, including email, Project ID: 13498                 1
+
+    if(formName=='updateTask' )
+    popup.style.top = (document.getElementById(id).offsetHeight+2) + "px";
+    else
+    popup.style.top = parseInt(document.getElementById(id).offsetHeight+2) + "px";
+    //Task : delegate tab - whole workflow, including email, Project ID: 13498
+
+    if(formName=='updateTask' || formName == 'createOpp') //PPOL -1297
+    popup.style.left = getAbsElementXById(id)-document.getElementById(id).offsetLeft-10+ "px";
+    else
+    // popup.style.left = getAbsElementX(document.getElementById(id))+ "px";
+    popup.style.left = 0;
+    //PPOL -1297 Problem with auto complete field for customer name - Opportunity - New
+    if(formName ==  'createOpp')
+      popup.style.top= "";
+    popup.style.width = document.getElementById(id).offsetWidth + "px";
+
+    /*PPOL-1556*/
+    if(formName == 'newTransaction')
+    {
+      popup.style.top= 212+"px";
+      popup.style.left = getAbsElementXById(id)-document.getElementById(id).offsetLeft-1+ "px";
+      popup.style.width = document.getElementById(id).offsetWidth + "px";
+    }
+    // PPOL-904  Dynamically adding reference values from appt name
+    if(formName == 'addContactRef')
+    {
+      popup.style.top= 84+"px";
+        console.log(" addContactRef getAbsElementXById(id)"+getAbsElementXById(id));
+      popup.style.left = 109+ "px";
+      popup.style.width = document.getElementById(id).offsetWidth + "px";
+    }
+
+    if(formName =='mainSearch') {
+      var w = document.getElementById('globalSearchContainer').offsetWidth;
+      popup.style.width = parseInt( w + 17 ) + 'px';
+    }
+
+    popup.style.visibility = 'visible';
+    
+    popup.style.display = 'block';
+    if(formName=='mainSearch') {
+      jQuery('#mainSearchSpinner').hide();
+    }
+    adjustiFrame( popup );
+  }
+
+  function addOptionHandlers(option) {
+    addListener(option, "click", handleClick);
+    addListener(option, "mouseover", handleOver);
+  }
+
+  var updater = liveUpdater(constructUri, handlerFunc, null, empty);
+  var timeout = false;
+
+  function start(e) {
+
+    if (timeout) window.clearTimeout(timeout);
+
+    if(formName=='mainSearch') {
+      jQuery('#mainSearchSpinner').show();
+    }
+
+    var key = 0;
+    if (e.keyCode)                          { key = e.keyCode; }
+    else if (typeof(e.which)!= 'undefined') { key = e.which; }
+    
+    var fieldLength = inputField.value.length;
+
+
+    //up arrow
+    if (key == 38) {
+      if(formName!=='mainSearch') {
+        if (current > 0) {
+          items[current].className = '';
+          current--;
+          items[current].className = 'selected';
+          items[current].scrollIntoView(false);
+        }
+      }
+
+    //down arrow
+    } else if (key == 40) {
+      if(formName!=='mainSearch') {
+        if(current < items.length - 1) {
+          items[current].className = '';
+          current++;
+          items[current].className = 'selected';
+          items[current].scrollIntoView(false);
+        }
+      }
+
+    //enter or tab
+    } else if ((key == 13 || key == 9) && popup.style.visibility == 'visible') {
+
+      if(formName!=='mainSearch') {
+
+        //Task : delegate tab - whole workflow, including email, Project ID: 13498
+        if (formName == 'updateTask')
+        {
+            // document.getElementById('delegate_td').style.display = 'block';
+            // document.getElementById('expdate').style.display = 'block';
+            // document.getElementById('delegation_owner_options').style.display = 'block';
+
+            document.getElementById('delegateOptions').style.display = 'block';
+        }
+        if(items[current].innerHTML.indexOf('None Found')>0){
+            //Task : delegate tab - whole workflow, including email, Project ID: 13498
+            //inputField.value = '';
+            inputField.value = inputField.value;
+            //Email Task    Fwd: Task Summary, view and dashboard     :N2G-012    :19Jun2013
+            //document.getElementById('cbChangeTaskOwner').checked = false;
+            document.getElementById('mailButton').innerHTML = 'Send Email';
+            document.getElementById('mailButton').className = 'btn-ppol blue';
+            // document.getElementById('mailButton').style.background = '#20b3ea';
+            // document.getElementById('mailButton').style.color = '#ffffff';
+            document.getElementById('mailButton').onclick=function () {
+              delegate_proceed();
+            };
+
+        } else {
+
+            //PPOL-2094  Search Bar
+            if(formName!="mainSearch")
+            inputField.value = items[current].innerHTML;
+            if (formName == 'updateTask'){
+              //Email Task    Fwd: Task Summary, view and dashboard     :N2G-012    :19Jun2013    
+              //document.getElementById('cbChangeTaskOwner').checked = true;
+              document.getElementById('mailButton').innerHTML = 'Delegate';
+              document.getElementById('mailButton').className = 'btn-ppol blue';
+              // document.getElementById('mailButton').style.background = '#20b3ea';
+              // document.getElementById('mailButton').style.color = '#ffffff';
+              document.getElementById('mailButton').onclick=function () {
+                delegate_proceed();
+              };
+            }
+        }
+
+        populateHiddenValue( items[current] );
+        popup.style.visibility = 'hidden';
+        popup.style.display = 'none';
+        adjustiFrame( popup );
+        inputField.focus();
+        if (isIE) {
+          event.returnValue = false;
+        } else {
+          e.preventDefault();
+        }
+        postFunc();
+
+      }
+
+    //escape
+    } else if (key == 27) {
+      hidePopup();
+      if (isIE) {
+        event.returnValue = false;
+      } else {
+        e.preventDefault();
+      }
+
+    } else {
+      // increment/decrement fieldLength for correct count
+      if (key == 8 || key == 46) {  // 8 = backspace, 46=delete
+        fieldLength -= 1;
+      } else {
+        fieldLength += 1;
+      }
+      // Check for empty input field or not enough characters
+      if (fieldLength < minimumCharacters)
+      {
+        // hide popup and return
+        hidePopup();
+      }
+      else
+      {
+        if (key != 9)
+        {
+          timeout = window.setTimeout(updater, 300);
+        }
+      }
+  
+    }
+  
+  }
+
+  addKeyListener(inputField, start);
+  addListener(popup, 'mouseover', handlePopupOver);
+  addListener(popup, 'mouseout', handlePopupOut);
+}

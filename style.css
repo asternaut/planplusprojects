@@ -240,7 +240,7 @@ input, select{
   font-size: 12pt;
   color: #444;
   border-bottom: 1px solid #dadada;
-  background: #f2f2f2;
+  /* background: #f2f2f2; */
   text-indent: 5px;
   padding: 5px 0px;
 }
@@ -338,7 +338,7 @@ select option {
   }
 
   .sign-up-CTA{
-    margin: 0% 0 6% 0;
+    margin: 0% 0 6% 0;background: #f2f2f2;
   }
 }
 

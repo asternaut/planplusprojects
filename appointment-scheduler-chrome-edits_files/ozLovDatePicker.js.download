@@ -1,0 +1,159 @@
+
+var Nav4 = ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4));
+Calwindow = new Object;
+var calwidth=480;
+var calheight=220;
+
+function opencal(fieldobj)
+{
+  var openleft=100;
+  var opentop=100;
+  
+  if (Calwindow.close && !Calwindow.closed)
+  {
+    // don't position calendar if already open
+    var attr = "resizable=no,width=" + calwidth + ",height=" + calheight;
+  } 
+  else
+  {
+    if (Nav4)
+    {
+      // center on the main window
+      openleft = parseInt(window.screenX + ((window.outerWidth - calwidth) / 2),10);
+      opentop = parseInt(window.screenY + ((window.outerHeight - calheight) / 2),10);
+
+      var attr = "screenX=" + openleft + ",screenY=" + opentop;
+      attr += ",resizable=no,width=" + calwidth + ",height=" + calheight;
+    } 
+    else 
+    {
+      // best we can do is center in screen
+      openleft = parseInt(((screen.width - calwidth) / 2),10);
+      opentop = parseInt(((screen.height - calheight) / 2),10);
+                
+      var attr = "left=" + openleft + ",top=" + opentop;
+      attr += ",resizable=no,width=" + calwidth + ",height=" + calheight; 
+    }
+  }
+ 
+  Calwindow=window.open('ozLOVDatePicker.jsp?day='+fieldobj, 'Calendar', attr);
+  if (Calwindow.opener == null)
+  {
+    Calwindow.opener = self; 
+  }
+  Calwindow.focus();
+}
+
+function opencal2(fieldobj)
+{
+  var openleft=100;
+  var opentop=100;
+  
+  if (Calwindow.close && !Calwindow.closed)
+  {
+    // don't position calendar if already open
+    var attr = "resizable=no,width=" + calwidth + ",height=" + calheight;
+  } 
+  else
+  {
+    if (Nav4)
+    {
+      // center on the main window
+      openleft = parseInt(window.screenX + ((window.outerWidth - calwidth) / 2),10);
+      opentop = parseInt(window.screenY + ((window.outerHeight - calheight) / 2),10);
+
+      var attr = "screenX=" + openleft + ",screenY=" + opentop;
+      attr += ",resizable=no,width=" + calwidth + ",height=" + calheight;
+    } 
+    else 
+    {
+      // best we can do is center in screen
+      openleft = parseInt(((screen.width - calwidth) / 2),10);
+      opentop = parseInt(((screen.height - calheight) / 2),10);
+                
+      var attr = "left=" + openleft + ",top=" + opentop;
+      attr += ",resizable=no,width=" + calwidth + ",height=" + calheight; 
+    }
+  }
+ 
+  Calwindow=window.open('ozLOVDatePicker.jsp?v2=Y&day='+fieldobj, 'Calendar', attr);
+  if (Calwindow.opener == null)
+  {
+    Calwindow.opener = self; 
+  }
+  Calwindow.focus();
+}
+
+function opencal21(fieldobj, aptName)
+{
+  var openleft=100;
+  var opentop=100;
+  if (Calwindow.close && !Calwindow.closed)
+  {
+    // don't position calendar if already open
+    var attr = "resizable=no,width=" + calwidth + ",height=" + calheight;
+  }
+  else
+  {
+    if (Nav4)
+    {
+      // center on the main window
+      openleft = parseInt(window.screenX + ((window.outerWidth - calwidth) / 2),10);
+      opentop = parseInt(window.screenY + ((window.outerHeight - calheight) / 2),10);
+
+      var attr = "screenX=" + openleft + ",screenY=" + opentop;
+      attr += ",resizable=no,width=" + calwidth + ",height=" + calheight;
+    }
+    else
+    {
+      // best we can do is center in screen
+      openleft = parseInt(((screen.width - calwidth) / 2),10);
+      opentop = parseInt(((screen.height - calheight) / 2),10);
+
+      var attr = "left=" + openleft + ",top=" + opentop;
+      attr += ",resizable=no,width=" + calwidth + ",height=" + calheight;
+    }
+  }
+
+  Calwindow=window.open('ozLOVDatePicker.jsp?v2=Y&day='+fieldobj+'&name='+aptName, 'Calendar', attr);
+  if (Calwindow.opener == null)
+  {
+    Calwindow.opener = self;
+  }
+  Calwindow.focus();
+}
+
+function opencal1M(fieldobj)
+{
+  var openleft=100;
+  var opentop=100;
+  
+  if (Calwindow.close && !Calwindow.closed)
+  {
+    // don't position calendar if already open
+    var attr = "resizable=no,width=" + calwidth + ",height=" + calheight;
+  } 
+  else
+  {
+    if (Nav4)
+    {
+      // center on the main window
+
+      var attr = "screenX=0,screenY=0";
+      attr += ",resizable=no,width=200,height=200";
+    } 
+    else 
+    {
+                
+      var attr = "left=0,top=0";
+      attr += ",resizable=no,width=200,height=200"; 
+    }
+  }
+ 
+  Calwindow=window.open('ozLOVDatePicker1M.jsp?day='+fieldobj, 'Calendar', attr);
+  if (Calwindow.opener == null)
+  {
+    Calwindow.opener = self; 
+  }
+  Calwindow.focus();
+}

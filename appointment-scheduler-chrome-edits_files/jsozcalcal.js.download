@@ -1,0 +1,530 @@
+  //Drag and Drop script - http://www.btinternet.com/~kurt.grigg/javascript
+
+  (function()
+  {
+      //Stop Opera selecting anything whilst dragging.
+      if (window.opera){ document.write("<input type='hidden' id='Q' value=' '>"); }
+
+      var dragok = false;
+      var dragNode;                 // the temporary div that gets moved around
+      var srcObjId = null;
+      var srcObjId2 = null;
+      var originalPosY = null;
+      var originalPosYAdjust = null;
+      var saveMoveToX = null, saveMoveToY = null;
+
+      // This variable is used when dragging an object to change its duration.
+      // When an appointment is being dragged, the value will be: normal, master, or repeating. 
+      srcObjCustomData = "";
+
+      function dragdropmousedown(e)
+      {
+      
+        // taken from menu.js
+        if (activeButton != null)
+        {
+          var el;
+          // Find the element that was clicked on.
+          if (browser.isIE) el = window.event.srcElement;
+          else              el = (event.target.tagName ? event.target : event.target.parentNode);
+
+          // If the active button was clicked on, exit.
+          if (el == activeButton)
+            return;
+
+          // If the element is not part of a menu, reset and clear the active button
+          if (getContainerWith(el, "DIV", "menu") == null)
+          {
+            if ( activeButton.className.startswith('drag',0,4) )
+            {
+              activeButton.style.display = "none";
+              activeButton = null;
+            }
+            else  // regular menu
+            {
+              resetButton(activeButton);
+              activeButton = null;
+            }
+          }
+        }
+        /*Calendar Summary Add the 5 day view           :N2G-012         :14Nov2012*/
+        //if ( _gCalCurrentTab != 1 && _gCalCurrentTab != 2 && _gCalCurrentTab != 3 )  
+        if ( _gCalCurrentTab != 1 && _gCalCurrentTab != 2 && _gCalCurrentTab != 3 && _gCalCurrentTab != 7 )
+          return true;
+        if (!e) e = window.event;
+        var temp = (typeof e.target != "undefined")?e.target:e.srcElement;
+        if (temp.tagName != "HTML"|"BODY" && temp.className != "dragclass1" && temp.className != "dragclass2" && temp.className != "dragclass3" && temp.className != "dragclassT" )
+        {
+          temp = (typeof temp.parentNode != "undefined")?temp.parentNode:temp.parentElement;
+        }
+        
+        // This is when the user clicks on the bar at the top of an appointment.
+        if (temp.className == "dragclass1")  //  appointment in day or week mode
+        {
+          if (window.opera){ document.getElementById("Q").focus(); }
+
+          dragok = true;
+          srcObjId = temp.getAttribute( 'id' );  // could be something like appt_drag_123
+          srcObjId = 'appt_div_' + srcObjId.substring(10);
+          getDivContainer( $('resize_'+srcObjId) ).style.display = "none";
+           
+          // Set the custom data from the resize bar.  This will be used later to determine if a dialog should be shown.
+          srcObjCustomData = $('resize_'+srcObjId).getAttribute( 'customdata' );
+          if ( srcObjCustomData == null) srcObjCustomDate = "";         
+          
+          var x = e.clientX;
+          var y = e.clientY;
+
+          originalPosY = y;
+          originalPosYAdjust = y - getAbsElementYById(srcObjId);
+
+          saveMoveToX = -1; saveMoveToY = 0;  // -1 means don't change if not moved.
+
+          document.onmousemove = dragdropmove;
+          document.onmouseup   = dragdropmouseup;
+          return true;
+        }
+        else if (temp.className == "dragclass2")
+        {
+          // This is when the resize bar is clicked on the bottom of the appointment.
+        
+          if (window.opera){ document.getElementById("Q").focus(); }
+
+          dragok = true;
+          
+          // For master appointments, the id will be something like: resize_appt_div_123
+          // For repeating appointments, the id will be something like: resize_appt_div_123_02/12/2008
+          srcObjId2 = temp.getAttribute( 'id' );
+          
+          // For master appointments, srcObjId will be set to something like: appt_div_123.
+          // For repeating appointments, srcObjId will be set to something like: appt_div_123_02/12/2008
+          srcObjId = 'appt_div_' + srcObjId2.substring(16);
+          srcObjCustomData = temp.getAttribute( 'customdata' );
+
+
+          originalPosY = e.clientY + document.body.scrollTop + $('divCalMain').scrollTop;  // position of the initial mouse-down
+          saveMoveToX = 0; saveMoveToY = 0;
+          document.onmousemove = drag2dropmove;
+          document.onmouseup   = dragdropmouseup2;
+          return true;
+        }
+        else if (temp.className == "dragclass3")  // NEW_CAL_MONTH
+        {
+          if (window.opera){ document.getElementById("Q").focus(); }
+
+          dragok = true;
+          srcObjId = temp.getAttribute( 'id' );  // could be something like appt_drag_123
+          srcObjId = 'appt_div_' + srcObjId.substring(10);
+
+          originalPosY = e.clientY + document.body.scrollTop;   // position of the initial mouse-down
+          old_drag3dropmove_pos = -1;
+          document.onmousemove = drag3dropmove;
+          document.onmouseup   = dragdropmouseup3;
+          return true;
+        }
+        else if (temp.className == "dragclassT")
+        {
+          if (window.opera){ document.getElementById("Q").focus(); }
+
+          dragok = true;
+          srcObjId = temp.getAttribute( 'id' );  // could be something like task_div_123
+
+          dragNode = $( 'divDragMove' ) ;
+          dragNode.innerHTML = temp.innerHTML;
+          ToggleSet( 'divDragMove', 'block' );
+
+          originalPosY = e.clientY + document.body.scrollTop;   // position of the initial mouse-down
+          old_dragTdropmove_pos = '';
+          document.onmousemove = dragTdropmove;
+          document.onmouseup = dragdropmouseupT;
+          return true;
+        }
+      }
+
+      function dragdropmove(e)
+      {
+        if (!e) e = window.event;
+        var temp = (typeof e.target != "undefined")?e.target:e.srcElement;
+        if (temp.tagName != "HTML"|"BODY" && temp.className != "dragclass1") {
+          temp = (typeof temp.parentNode != "undefined")?temp.parentNode:temp.parentElement;
+        }
+        if (dragok)
+        {
+          var dragNodeX = e.clientX;
+          var dragNodeY = e.clientY;
+
+          if ( _gCalCurrentTab == 1 )
+          {
+            if ( dragNodeX > getAbsElementXById('markH_0') ) { dragNodeX = getAbsElementXById('markH_0'); saveMoveToX = 0; }
+            else                                             { dragNodeX = getAbsElementXById('markH_0'); saveMoveToX = -1; }
+          }
+          else if ( _gCalCurrentTab == 2 )
+          {
+            if ( dragNodeX > getAbsElementXById('markH_6') )      { dragNodeX = getAbsElementXById('markH_6'); saveMoveToX = 6; }
+            else if ( dragNodeX > getAbsElementXById('markH_5') ) { dragNodeX = getAbsElementXById('markH_5'); saveMoveToX = 5; }
+            else if ( dragNodeX > getAbsElementXById('markH_4') ) { dragNodeX = getAbsElementXById('markH_4'); saveMoveToX = 4; }
+            else if ( dragNodeX > getAbsElementXById('markH_3') ) { dragNodeX = getAbsElementXById('markH_3'); saveMoveToX = 3; }
+            else if ( dragNodeX > getAbsElementXById('markH_2') ) { dragNodeX = getAbsElementXById('markH_2'); saveMoveToX = 2; }
+            else if ( dragNodeX > getAbsElementXById('markH_1') ) { dragNodeX = getAbsElementXById('markH_1'); saveMoveToX = 1; }
+            else if ( dragNodeX > getAbsElementXById('markH_0') ) { dragNodeX = getAbsElementXById('markH_0'); saveMoveToX = 0; }
+            else                                                  { dragNodeX = getAbsElementXById('markH_0'); saveMoveToX = -1; }
+          }
+          /*Calendar Summary Add the 5 day view           :N2G-012         :14Nov2012*/ 
+          else if ( _gCalCurrentTab == 7 )
+          {
+          if ( dragNodeX > getAbsElementXById('markH_5') ) { dragNodeX = getAbsElementXById('markH_5'); saveMoveToX = 5; }
+          else if ( dragNodeX > getAbsElementXById('markH_4') ) { dragNodeX = getAbsElementXById('markH_4'); saveMoveToX = 4; }
+          else if ( dragNodeX > getAbsElementXById('markH_3') ) { dragNodeX = getAbsElementXById('markH_3'); saveMoveToX = 3; }
+          else if ( dragNodeX > getAbsElementXById('markH_2') ) { dragNodeX = getAbsElementXById('markH_2'); saveMoveToX = 2; }
+          else if ( dragNodeX > getAbsElementXById('markH_1') ) { dragNodeX = getAbsElementXById('markH_1'); saveMoveToX = 1; }
+          else                                                  { dragNodeX = getAbsElementXById('markH_1'); saveMoveToX = -1; }
+
+          }
+
+          var intDiffY = parseInt( ''+ ( ( dragNodeY - originalPosY ) / 21 ) );
+          dragNodeY    = originalPosY + ( intDiffY * 21 ) - originalPosYAdjust;
+          saveMoveToY  = intDiffY;
+          if ( dragNodeY <= getAbsElementYById('markH_0') )
+          {
+            dragNodeY   = getAbsElementYById('markH_0') + 1;
+          }
+
+          var yAdjust = getAbsElementY( $("mainRedux") );
+          var xAdjust = getAbsElementX( $("mainRedux") );
+
+          $( srcObjId ).zIndex = ++adjustiFrameMaxZIndex;
+          $( srcObjId ).style.left = dragNodeX - xAdjust;
+          $( srcObjId ).style.top  = dragNodeY - yAdjust;
+          document.onmouseup = dragdropmouseup;
+          return false;
+        }
+      }
+
+      function drag2dropmove(e)
+      {
+        if (!e) e = window.event;
+        if (dragok)
+        {
+          var dragNodeY = e.clientY + document.body.scrollTop  + $('divCalMain').scrollTop;
+
+          var intDiffY = parseInt( ''+ ( ( dragNodeY - originalPosY ) / 21 ) );
+          dragNodeY    = originalPosY + ( intDiffY * 21 );
+          if ( dragNodeY < getAbsElementYById(srcObjId)+21 )
+            dragNodeY = getAbsElementYById(srcObjId)+21;
+
+          var yAdjust = getAbsElementY( $("divCalMain") ) - 37;
+          var xAdjust = getAbsElementX( $("divCalMain") );
+
+          // srcObjId2 is the resize bar, srcObjId is the appt box
+          getDivContainer( $( srcObjId2 ) ).style.top  = dragNodeY - yAdjust;
+          $( srcObjId ).style.height  = dragNodeY - getAbsElementYById(srcObjId);
+          saveMoveToY = ( dragNodeY - getAbsElementYById(srcObjId) ) / 20;
+          document.onmouseup = dragdropmouseup2;
+          return false;
+        }
+      }
+
+      var old_drag3dropmove_pos = -1;
+      function drag3dropmove(e)
+      {
+        if (!e) e = window.event;
+        var temp = (typeof e.target != "undefined")?e.target:e.srcElement;
+        if (temp.tagName != "HTML"|"BODY" && temp.className != "dragclass3") {
+          temp = (typeof temp.parentNode != "undefined")?temp.parentNode:temp.parentElement;
+        }
+        if (dragok)
+        {
+          var dragNodeX = e.clientX + document.body.scrollLeft + $('divCalMain').scrollLeft;
+          var dragNodeY = e.clientY + document.body.scrollTop  + $('divCalMain').scrollTop;
+
+          var bsx = getBrowserSizeX() - 240;
+          if ( browser.isIE ) bsx += 20;
+          for ( i=0; i<42; i++ )
+          {
+            try {
+              var tmpDivId = 'IMG_NO_'+i;
+              var nnX = getAbsElementXById(tmpDivId);
+              var nnY = getAbsElementYById(tmpDivId);
+              if ( dragNodeX >= nnX && dragNodeX <= nnX+(bsx/7) && dragNodeY >=nnY && dragNodeY <= nnY + 70 )
+              {
+                if ( old_drag3dropmove_pos >= 0 )
+                {
+                  $( 'CELL_NO_'+old_drag3dropmove_pos ).className = 'calMonthPortDay';
+                }
+                old_drag3dropmove_pos = i;
+                $( 'CELL_NO_'+old_drag3dropmove_pos ).className = 'genTblContentCellCal';
+                break;
+              }
+            }
+            catch(ee) { }
+          }
+
+          var yAdjust = getAbsElementY( $("divCalMain") ) - 37;
+          var xAdjust = getAbsElementX( $("divCalMain") );
+
+          $( srcObjId ).zIndex = ++adjustiFrameMaxZIndex;
+          $( srcObjId ).style.left = dragNodeX - xAdjust;
+          $( srcObjId ).style.top  = dragNodeY - yAdjust;
+          document.onmouseup = dragdropmouseup3;
+          return false;
+        }
+      }
+
+    var old_dragTdropmove_pos = '';
+    function dragTdropmove(e)
+    {
+    
+      if (!e) e = window.event;
+
+      if (dragok)
+      {
+        var dragNodeX = e.clientX + document.body.scrollLeft + $('divCalMain').scrollLeft;
+        var dragNodeY = e.clientY + document.body.scrollTop  + $('divCalMain').scrollTop;
+
+        if ( old_dragTdropmove_pos != '' && $( old_dragTdropmove_pos ) != null )
+        {
+          $( old_dragTdropmove_pos ).className = 'calMonthPortDay';
+          old_dragTdropmove_pos = '';
+        }
+
+        var findX = -1;
+        var findY = -1;
+        if ( _gCalCurrentTab == 1 )  // DAY
+        {
+          if ( dragNodeX > getAbsElementXById('markH_0') ) { findX = 0; }
+          for (var i=0; i<48; i++)
+          {
+            if ( $('markV_'+i) != null && dragNodeY >= getAbsElementYById('markV_'+i) && dragNodeY < ( getAbsElementYById('markV_'+i)+20 ) )
+            {
+              findY = i;
+              break;
+            }
+          }
+          if ( findX >= 0 && findY >= 0 )
+          {
+            old_dragTdropmove_pos = 'CELL_NO_'+findX+'_'+findY;
+            $( old_dragTdropmove_pos ).className = 'genTblContentCellCal';
+          }
+        }
+        else if ( _gCalCurrentTab == 2 )  // WEEK
+        {
+          if ( dragNodeX > getAbsElementXById('markH_6') )      { findX = 6; }
+          else if ( dragNodeX > getAbsElementXById('markH_5') ) { findX = 5; }
+          else if ( dragNodeX > getAbsElementXById('markH_4') ) { findX = 4; }
+          else if ( dragNodeX > getAbsElementXById('markH_3') ) { findX = 3; }
+          else if ( dragNodeX > getAbsElementXById('markH_2') ) { findX = 2; }
+          else if ( dragNodeX > getAbsElementXById('markH_1') ) { findX = 1; }
+          else if ( dragNodeX > getAbsElementXById('markH_0') ) { findX = 0; }
+          for (var i=0; i<48; i++)
+          {
+            if ( $('markV_'+i) != null && dragNodeY >= getAbsElementYById('markV_'+i) && dragNodeY < ( getAbsElementYById('markV_'+i)+20 ) )
+            {
+              findY = i;
+              break;
+            }
+          }
+          if ( findX >= 0 && findY >= 0 )
+          {
+            old_dragTdropmove_pos = 'CELL_NO_'+findX+'_'+findY;
+            $( old_dragTdropmove_pos ).className = 'genTblContentCellCal';
+          }
+        }
+        else if ( _gCalCurrentTab == 3 )  // MONTH
+        {
+          var bsx = getBrowserSizeX() - 240;
+          if ( browser.isIE ) bsx += 20;
+          for ( i=0; i<42; i++ )
+          {
+            try {
+              var tmpDivId = 'IMG_NO_'+i;
+              var nnX = getAbsElementXById(tmpDivId);
+              var nnY = getAbsElementYById(tmpDivId);
+              if ( dragNodeX >= nnX && dragNodeX <= nnX+(bsx/7) && dragNodeY >=nnY && dragNodeY <= nnY + 80 )
+              {
+                old_dragTdropmove_pos = 'CELL_NO_'+i;
+                $( old_dragTdropmove_pos ).className = 'genTblContentCellCal';
+                break;
+              }
+            }
+            catch(ee) { }
+          }
+        }
+
+        dragNode.zIndex = ++adjustiFrameMaxZIndex;
+        dragNode.style.left = dragNodeX;
+        dragNode.style.top  = dragNodeY;
+        document.onmouseup = dragdropmouseupT;
+        return false;
+      }
+    }
+
+    function dragdropmouseup(e)
+    {
+        dragok = false;
+        document.onmousemove = null;
+        document.onmouseup = null;
+        
+        //TODO:  Bug 340.  Resize for all or some.
+        
+        // The complexity is that the appointment can be moved to a different time at the 
+        // same time it is moved to a new date.  So I have to figure out how to move to
+        // a new date, but also display a time dialog for the start time.
+        
+        
+          if ( srcObjCustomData == "normal" ) {
+            // It's a single normal appointment.  There is no need to show a dialog.
+            gXtraParam = '&act=APPTMOVE&srcId='+srcObjId+'&saveMoveToX='+saveMoveToX+'&saveMoveToY='+saveMoveToY;    
+            // This refresh needs to be here because the changes are made without a dialog being displayed.
+            calRefreshCalRemote();
+                    
+          }
+          else 
+          {
+         
+            if ( saveMoveToY != 0)
+            { 
+              durationURL = 'ozPpolApptChangeStartTime.jsp?act=APPTMOVE&srcId='+srcObjId+'&saveMoveToX='+saveMoveToX+'&saveMoveToY='+ saveMoveToY;
+              openApptDurationChangeWindow(durationURL, 'PpolApptLov');
+
+              // Need to handle the X here.
+               gXtraParam = '&act=APPTMOVE&srcId='+srcObjId+'&saveMoveToX='+saveMoveToX+'&saveMoveToY=0'
+              
+
+            }
+            else 
+            {
+              // Not sure how to deal with this for now.  There is an X and a Y.
+              gXtraParam = '&act=APPTMOVE&srcId='+srcObjId+'&saveMoveToX='+saveMoveToX+'&saveMoveToY='+saveMoveToY;
+            }
+          }
+                
+
+        // Don't want to do the refresh here, because doing a refresh will move the appointment
+        // back to it's original position.  That is confusing to the user.  Instead, the refresh
+        // is done when the user makes a decision in the dialog box, either to make changes or
+        // to cancel making changes.  If the user makes changes, the appointment will be shown at
+        // its new time.  If the user cancels the change, the appoinment will move back to its
+        // original time.
+
+        //calRefreshCalRemote();
+        return false;
+    }
+
+    function dragdropmouseup2(e)
+    {
+        // The appointment resize bar has been dragged.
+        // It has now been released.
+        dragok = false;
+        document.onmousemove = null;
+        document.onmouseup = null;
+
+        // If the user has clicked on the resize bar and has not drug it anywhere, the
+        // new saveMoveToY will be zero, so there is no need to show the resize dialog,
+        // or to call a resize operation.
+        if ( saveMoveToY > 0 )
+        { 
+	        if ( srcObjCustomData == "normal" ) {
+	           // clean up, post XML for appointment resize
+	          gXtraParam = '&act=APPTSIZE&srcId='+srcObjId+'&saveMoveToY='+saveMoveToY;
+	          // Want to refresh the screen here because for normal appointments, the resize is done without a dialog.
+            calRefreshCalRemote();
+	        }
+	        else {
+	          durationURL = 'ozPpolApptChangeDuration.jsp?act=APPTSIZE&srcId=' + srcObjId + '&saveMoveToY=' + saveMoveToY;
+	          openApptDurationChangeWindow(durationURL, 'PpolApptLov');
+	        }
+        }        
+        
+        // Don't want a refresh here, because a dialog will be shown and it will refresh the screen.  
+        // If this refresh is called, the appointment will be moved back to the original time while the
+        // dialog is up, and this will confuse the user.
+        //calRefreshCalRemote();
+        return false;
+    }
+
+    function dragdropmouseup3(e)
+    {
+        dragok = false;
+        document.onmousemove = null;
+        document.onmouseup = null;
+
+        gXtraParam = '&act=APPTMOVE&srcId='+srcObjId+'&saveMoveToX='+old_drag3dropmove_pos;
+        calRefreshCalRemote();
+        old_drag3dropmove_pos = -1;
+        return false;
+    }
+
+    function dragdropmouseupT(e)
+    {
+        dragok = false;
+        document.onmousemove = null;
+        document.onmouseup = null;
+
+        gXtraParam = '&act=TASK2APPT&srcId='+srcObjId+'&saveMoveToPos='+old_dragTdropmove_pos;
+        calRefreshCalRemote();
+
+        // clean up
+        ToggleSet( 'divDragMove', 'none' );
+        if ( old_dragTdropmove_pos != '' && $( old_dragTdropmove_pos ) != null )
+          $( old_dragTdropmove_pos ).className = 'calMonthPortDay';
+        old_dragTdropmove_pos = '';
+        return false;
+    }
+
+    // Function used by dragdropmouseup2 to display a dialog changing the duration 
+    // of an appointment.  For some reason, this function has to be here.  When it was
+    // in ozCalCal.jsp, the url would be null, in IE7.  (It was ok in FireFox.)
+    function openApptDurationChangeWindow(theURL,winName) 
+    { 
+      var popWin = window.open(theURL,winName,'left=100,top=60,width=640,height=300,scrollbars=yes,resizable=yes');
+      popWin.focus();
+    }
+
+
+
+      document.onmousedown = dragdropmousedown;
+    } )();
+
+/*
+  var newApptNameInlineDay   = '';
+  var newApptNameInlineStart = '';
+  function newApptNameInline( day, start )
+  {
+    if ( gCalRefreshInProgress == 1 )
+      return;
+    newApptNameInlineDay   = day;
+    newApptNameInlineStart = start;
+    currMouseX = window.event.clientX+document.body.scrollLeft;
+    currMouseY = window.event.clientY+document.body.scrollTop;
+    obj = document.getElementById('fcNewApptName');
+    obj.style.position = "absolute";
+    obj.style.visibility = 'visible';
+    obj.style.display = "block";
+    obj.style.top   = (currMouseY-8) + "px";
+    if ( currMouseX > getBrowserSizeX() - 200 )  obj.style.left  = (getBrowserSizeX()-200) + "px";
+    else                                         obj.style.left  = (currMouseX-12) + "px";
+    obj.style.zIndex = ++adjustiFrameMaxZIndex;
+    $('fcNewApptNameInput').value = '';
+    $('fcNewApptNameInput').focus();
+    $('fcNewApptNameInput').select();
+  }
+*/
+
+
+
+
+
+
+
+  function newAppointmentNameUnfocus()
+  {
+    if ( gCalRefreshInProgress == 1 )
+      return;
+    document.getElementById('fcNewApptName').style.display = "none";
+    var inputVal = $('fcNewApptNameInput').value;
+    if ( inputVal != '' )
+    {
+        gXtraParam = '&act=APPTNEW&newday='+newApptNameInlineDay+'&newstart='+newApptNameInlineStart+'&apptname='+escape(inputVal);
+        calRefreshCalRemote();
+    }
+  }

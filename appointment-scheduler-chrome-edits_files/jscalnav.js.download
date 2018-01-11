@@ -1,0 +1,119 @@
+var jscalnav_calnav_in_progress = 0;
+function calMonthNavJump( pagesrc, daykey )
+{
+  var monthDiv = null;
+  
+  if ( pagesrc == 'lovDateRangeLeft' )        monthDiv = document.getElementById('calNavMonthBoxLeft');
+  else if ( pagesrc == 'lovDateRangeRight' )  monthDiv = document.getElementById('calNavMonthBoxRight');
+  else                                        monthDiv = document.getElementById('calNavMonthBox');  // this is true if pagesrc == 'ozCalCal'
+  if ( monthDiv == null )
+  {
+    alert( 'Monthly Calendar Div not found.' );
+    return;
+  }
+
+  if ( jscalnav_calnav_in_progress == 1 )
+    return;
+
+  // ajax_calnav_submiturl should be defined in allinctb.jsp
+  if ( pagesrc == 'lovDateRangeLeft' )
+    postXmlHttp( ajax_calnav_submiturl+'&src='+pagesrc+'&day='+daykey, 'calMonthNavJumpRefreshLovDateRangeLeft()' );
+  else if ( pagesrc == 'lovDateRangeRight' )
+    postXmlHttp( ajax_calnav_submiturl+'&src='+pagesrc+'&day='+daykey, 'calMonthNavJumpRefreshLovDateRangeRight()' );
+  else
+    postXmlHttp( ajax_calnav_submiturl+'&src='+pagesrc+'&day='+daykey, 'calMonthNavJumpRefresh()' );
+  jscalnav_calnav_in_progress = 1;
+}
+function calMonthNavJumpBG( pagesrc, daykey )
+{
+  var monthDiv = null;
+  
+  if ( pagesrc == 'lovDateRangeLeft' )        monthDiv = document.getElementById('calNavMonthBoxLeft');
+  else if ( pagesrc == 'lovDateRangeRight' )  monthDiv = document.getElementById('calNavMonthBoxRight');
+  else                                        monthDiv = document.getElementById('calNavMonthBox');  // this is true if pagesrc == 'ozCalCal'
+  if ( monthDiv == null )
+  {
+    alert( 'Monthly Calendar Div not found.' );
+    return;
+  }
+
+  if ( jscalnav_calnav_in_progress == 1 )
+    return;
+
+  // ajax_calnav_submiturl should be defined in allinctb.jsp
+  if ( pagesrc == 'lovDateRangeLeft' )
+    postXmlHttp( ajax_calnav_submiturl_bg+'&src='+pagesrc+'&day='+daykey, 'calMonthNavJumpRefreshLovDateRangeLeft()' );
+  else if ( pagesrc == 'lovDateRangeRight' )
+    postXmlHttp( ajax_calnav_submiturl_bg+'&src='+pagesrc+'&day='+daykey, 'calMonthNavJumpRefreshLovDateRangeRight()' );
+  else
+    postXmlHttp( ajax_calnav_submiturl_bg+'&src='+pagesrc+'&day='+daykey, 'calMonthNavJumpRefresh()' );
+  jscalnav_calnav_in_progress = 1;
+}
+function calMonthNavJumpCalCal( daykey, calCurrentTa )
+{
+  if ( jscalnav_calnav_in_progress == 1 )
+    return;
+
+  var calMode = 'WEEK';
+  if ( calCurrentTa == 1 ) calMode = 'DAY';
+  if ( calCurrentTa == 3 ) calMode = 'MONTH';
+  if ( calCurrentTa == 4 ) calMode = 'DAY';
+  if ( calCurrentTa == 5 ) calMode = 'MONTH';
+  
+  // ajax_calnav_submiturl should be defined in allinctb.jsp
+  postXmlHttp( ajax_calnav_submiturl+'&src=ozCalCal&day='+daykey+'&cm='+calMode, 'calMonthNavJumpRefresh()' );
+  jscalnav_calnav_in_progress = 1;
+}
+function calMonthNavJumpRefresh()
+{
+  var refreshDiv = document.getElementById('calNavMonthBox');
+  if ( refreshDiv != null && _xmlHttpRequestObj.responseText.length>100 )
+    refreshDiv.innerHTML = _xmlHttpRequestObj.responseText; 
+  jscalnav_calnav_in_progress = 0;
+}
+function calMonthNavJumpRefreshV2( in_responseText, in_param )  // SimpleAJAXCall style
+{
+  var refreshDiv = document.getElementById('calNavMonthBox');
+  if ( refreshDiv != null && in_responseText.length>100 )
+    refreshDiv.innerHTML = in_responseText; 
+  jscalnav_calnav_in_progress = 0;
+}
+function calMonthNavJumpRefreshLovDateRangeLeft()
+{
+  var refreshDiv = document.getElementById('calNavMonthBoxLeft');
+  if ( refreshDiv != null && _xmlHttpRequestObj.responseText.length>100 )
+    refreshDiv.innerHTML = _xmlHttpRequestObj.responseText; 
+  jscalnav_calnav_in_progress = 0;
+}
+function calMonthNavJumpRefreshLovDateRangeRight()
+{
+  var refreshDiv = document.getElementById('calNavMonthBoxRight');
+  if ( refreshDiv != null && _xmlHttpRequestObj.responseText.length>100 )
+    refreshDiv.innerHTML = _xmlHttpRequestObj.responseText; 
+  jscalnav_calnav_in_progress = 0;
+}
+
+
+function calMonthNavJump3M( pagesrc, daykey )
+{
+  var monthDiv = document.getElementById('calNavMonthBox3M');
+  if ( monthDiv == null )
+  {
+    alert( 'Monthly Calendar Div not found.' );
+    return;
+  }
+
+  if ( jscalnav_calnav_in_progress == 1 )
+    return;
+
+  // ajax_calnav_submiturl should be defined in allinctb.jsp
+  postXmlHttp( ajax_calnav_submiturl+'&src='+pagesrc+'&day='+daykey, 'calMonthNavJump3MRefresh()' );
+  jscalnav_calnav_in_progress = 1;
+}
+function calMonthNavJump3MRefresh()
+{
+  var refreshDiv = document.getElementById('calNavMonthBox3M');
+  if ( refreshDiv != null && _xmlHttpRequestObj.responseText.length>100 )
+    refreshDiv.innerHTML = _xmlHttpRequestObj.responseText; 
+  jscalnav_calnav_in_progress = 0;
+}

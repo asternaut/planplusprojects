@@ -1,0 +1,20 @@
+.noprint, .no-print {
+	display: none !important;
+}
+
+.main-contain-redux {
+	position: relative;
+	top:0;
+}
+
+.page-title-redux.f.fx {
+	position: relative;
+}
+
+.main-redux-ft {
+	margin-top: 10px;
+} 
+
+input[type="submit"], input[type="button"] {
+	display: none;
+}
