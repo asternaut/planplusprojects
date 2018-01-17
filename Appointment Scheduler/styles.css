@@ -215,14 +215,13 @@ select:focus + .line-left, input:focus + .line-left, textarea:focus + .line-left
   border-radius: 10px;
   background-image: image();
 } */
-
 .date-picker{
   text-align: center;
-color: #131313;
-font-size: 20px;
-background-image: url("Images/calendar icon plain.png");
-background-repeat: no-repeat;
-background-position: right;
+  color: #131313;
+  font-size: 20px;
+  background-image: url("Images/calendar icon plain.png");
+  background-repeat: no-repeat;
+  background-position: right;
 }
 
 /*TIME PICKER STYLING*/
@@ -545,6 +544,10 @@ select option {
     width: 100%;
   }
 
+  .form-content {
+    padding: 10%;
+  }
+
   .time-date{
     display: flex;
     justify-content: space-between;
@@ -553,6 +556,10 @@ select option {
 
   .time-date>div{
     width: 45%;
+  }
+
+  .time-zone-callout{
+    width: 100%;
   }
 
   .popup_content{
@@ -569,5 +576,11 @@ select option {
 
   .sign-up-CTA{
     margin: 7% 0 7% 0;
+  }
+  .mobile-padding-fix{
+    padding: 5%;
+  }
+  .hide{
+    display: none;
   }
 }
