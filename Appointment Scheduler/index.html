@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Schedule an appointment</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+     <script>
+     $( function() {
+       $( "#datepicker" ).datepicker();
+     } );
+     </script>
+  </head>
+  <body>
+    <div class="top-bar">
+      <a href="http://planplusonline.com/"><img src="../planplus-logo.png"></a>
+      <a href="#"> Sign up for PlanPlus </a>
+    </div>
+
+    <form method="POST">
+      <div class="form">
+
+        <div class="header">
+            <h1> Schedule an appointment with </h1>
+        </div>
+
+        <div class="form-content">
+        <fieldset>
+          <div>
+            <h3> What day would you like to book?</h3>
+            <div class="name-info long-input first-div">
+              <input type="text" id="datepicker" class="date-picker"> <div class="line-left"></div>
+          </div>
+        </fieldset>
+
+
+        <a class="button" href="the-details.html"> Add the details </a>
+
+      </div>
+
+    </div>
+    </form>
+
+    <div class="sign-up-CTA">
+      <a href="#"> Get your own PlanPlus account </a>
+    </div>
+
+  </body>
+
+</html>

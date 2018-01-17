@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Schedule an appointment: pick the time</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+     <script>
+     $( function() {
+       $( "#datepicker" ).datepicker();
+     } );
+     </script>
+  </head>
+  <body>
+    <div class="top-bar">
+      <a href="http://planplusonline.com/"><img src="../planplus-logo.png"></a>
+      <a href="#"> Sign up for PlanPlus </a>
+    </div>
+
+    <form method="POST">
+      <div class="form">
+        <div class="header"> </div>
+
+        <div class="form-content">
+        <fieldset>
+          <div>
+            <div class="name-info long-input first-div">
+              <input type="text" id="datepicker" class="date-picker"> <div class="line-left"></div>
+              <h1> Name's availability </h1>
+              <div class="time-picker">
+                <a class="arrows"> < </a>
+                <div class="time-picker-container">
+                  <div class="time">
+                    <span>9am</span>
+                    <span>10am</span>
+                    <span>11am</span>
+                    <span>12am</span>
+                    <span>1pm</span>
+                    <span>2pm</span>
+                    <span>3pm</span>
+                    <span>4pm</span>
+                    <span>5pm</span>
+                  </div>
+                  <div class="time-picker-body">
+                    <div class="hour"></div>
+                    <div class="hour busy"></div>
+                    <div class="hour">
+                      <div class="quarter-hour busy"> </div>
+                      <div class="quarter-hour busy"> </div>
+                      <div class="quarter-hour"> </div>
+                      <div class="quarter-hour"> </div>
+                    </div>
+                    <div class="hour targeted my_popup_open"></div>
+                    <div class="hour"></div>
+                    <div class="hour"></div>
+                    <div class="hour"></div>
+                    <div class="hour"></div>
+                </div>
+              </div>
+              <a class="arrows"> > </a>
+            </div>
+              <p> click and drag to select a time block </p>
+            <div class="accordion-container">
+              <a class="accordion">Adjust time-zone</a>
+              <div class="panel">
+                <div class="current-timezone">
+                  <span> Currently:</span>
+                  <div class="time-zone-callout"> Mountain </div>
+                </div>
+                <div class="change-timezone">
+                  <span> Change to:</span>
+                  <select class="time-zone-callout">
+                    <option value="-12.0">Eniwetok, Kwajalein</option>
+                    <option value="-11.0">Midway Island, Samoa</option>
+                    <option value="-10.0">Hawaii</option>
+                    <option value="-9.0">Alaska</option>
+                    <option value="-8.0">Pacific</option>
+                    <option value="-7.0">Mountain</option>
+                    <option value="-6.0">Central</option>
+                    <option value="-5.0">Eastern</option>
+                    <option value="-4.0">Atlantic</option>
+                    <option value="-3.5">Newfoundland</option>
+                    <option value="-3.0">Brazil, Buenos Aires, Georgetown</option>
+                    <option value="-2.0">Mid-Atlantic</option>
+                    <option value="-1.0">Azores, Cape Verde Islands</option>
+                    <option value="0.0">Western Europe</option>
+                    <option value="1.0">Brussels, Copenhagen, Madrid, Paris</option>
+                    <option value="2.0">Kaliningrad, South Africa</option>
+                    <option value="3.0">Baghdad, Riyadh, Moscow, St. Petersburg</option>
+                    <option value="3.5">Tehran</option>
+                    <option value="4.0">Abu Dhabi, Muscat, Baku, Tbilisi</option>
+                    <option value="4.5">Kabul</option>
+                    <option value="5.0">Ekaterinburg, Islamabad, Karachi, Tashkent</option>
+                    <option value="5.5">Bombay, Calcutta, Madras, New Delhi</option>
+                    <option value="5.75">Kathmandu</option>
+                    <option value="6.0">Almaty, Dhaka, Colombo</option>
+                    <option value="7.0">Bangkok, Hanoi, Jakarta</option>
+                    <option value="8.0">Beijing, Perth, Singapore, Hong Kong</option>
+                    <option value="9.0"> Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
+                    <option value="9.5">Adelaide, Darwin</option>
+                    <option value="10.0">Eastern Australia, Guam, Vladivostok</option>
+                    <option value="11.0">Magadan, Solomon Islands, New Caledonia</option>
+                    <option value="12.0">Auckland, Wellington, Fiji, Kamchatka</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+
+            <div id="my_popup">
+
+              ...popup content...
+
+              <button class="my_popup_close">Close</button>
+
+            </div>
+
+          </div>
+        </fieldset>
+      </div>
+
+    </div>
+    </form>
+
+    <div class="sign-up-CTA">
+      <a href="#"> Get your own PlanPlus account </a>
+    </div>
+
+
+    <script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+      acc[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var panel = this.nextElementSibling;
+        if (panel.style.maxHeight){
+          panel.style.maxHeight = null;
+        } else {
+          panel.style.maxHeight = panel.scrollHeight + "px";
+        }
+      });
+    }
+    </script>
+    <script src="https://code.jquery.com/jquery-1.8.2.min.js"></script>
+    <script src="https://cdn.rawgit.com/vast-engineering/jquery-popup-overlay/1.7.13/jquery.popupoverlay.js"></script>
+    <script>
+      $(document).ready(function() {
+
+        // Initialize the plugin
+        $('#my_popup').popup();
+
+      });
+    </script>
+
+  </body>
+
+</html>
