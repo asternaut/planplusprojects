@@ -85,7 +85,7 @@ a:hover{
   opacity: 0.8
 }
 
-.button{
+button, .button{
   font-family: 'Inter UI', sans-serif;
   color: white;
   background: #FB8404;
@@ -361,9 +361,9 @@ background-position: right;
   background: mediumseagreen !important;
 }
 
-
-.shrinkM-underline{
-  margin-bottom: 10px !important;
+/* POPUP CONTENT */
+.popup_content{
+  width: 70%;
 }
 
 input, select, textarea{
@@ -377,6 +377,46 @@ input, select, textarea{
   padding: 5px 0px;
   width:100%;
   outline: none;
+}
+
+/*MESSAGE CONTAINER*/
+.msg-container{
+  margin: 6% auto;
+  max-width: 500px;
+  -webkit-box-shadow: 10px 10px 55px -11px rgba(0,0,0,0.13);
+    -moz-box-shadow: 10px 10px 55px -11px rgba(0,0,0,0.13);
+    box-shadow: 10px 10px 55px -11px rgba(0,0,0,0.13);
+}
+.msg-container h1{
+  color: #32CD32;
+  margin-bottom: 5px;
+  font-weight: 400;
+}
+.msg-container span{
+  color: #575757;
+  font-size: 13px;
+}
+.appointment-details{
+  margin-bottom: 35px;
+}
+.appointment-details h3{
+  color: #575757;
+  font-size: 16px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.appointment-details span{
+  background: #E6E6E6;
+  font-size: 20px;
+  color: #131313;
+  padding: 7px 17px;
+}
+.bottom-message{
+  text-align: center;
+  color: #575757;
+  font-size: 13px;
+  background: #DBDBDB;
+  padding: 15px 14px;
 }
 
 
@@ -421,8 +461,19 @@ select option {
   margin-right: 10%;
 }
 
-.first-div{
-  width: 100%;
+.time-date{
+  display: flex;
+  justify-content: space-between;
+}
+
+.time-date>div{
+  width: 25%;
+}
+
+.time-date .date-picker{
+  font-size: 12pt;
+  color: #444;
+  text-align: left;
 }
 
 .short{
@@ -431,7 +482,7 @@ select option {
 
 .sign-up-CTA{
   text-align: center;
-  margin: 0% 0 5% 0;
+  margin: 2% 0 5% 0;
   font-weight: bold;
   font-size: large;
 }
@@ -473,7 +524,7 @@ select option {
   }
 
   .sign-up-CTA{
-    margin: 0% 0 6% 0;
+    margin: 2% 0 6% 0;
 }
 
 
@@ -492,9 +543,31 @@ select option {
 
   .showE input {
     width: 100%;
-}
+  }
+
+  .time-date{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .time-date>div{
+    width: 45%;
+  }
+
+  .popup_content{
+    width: 100%;
+  }
+  .msg-container {
+    max-width: 92%;
+  }
+
+  .appointment-details span{
+    font-size: 14px;
+    font-weight: 500;
+  }
 
   .sign-up-CTA{
-    margin: 0% 0 7% 0;
+    margin: 7% 0 7% 0;
   }
 }
