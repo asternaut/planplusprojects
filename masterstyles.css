@@ -1,0 +1,439 @@
+@import url('https://rsms.me/inter/inter-ui.css');
+
+body{
+  font-family: 'Inter UI', sans-serif;
+  background: #e6e6e6;
+  margin: 0;
+}
+
+.red{
+  color: tomato;
+}
+.blue{
+  color: #007EFF;
+}
+.orange{
+  color: #FF6F00;
+}
+.green{
+  color: lawngreen;
+}
+
+h1{
+  font-size: 18pt;
+  text-align: center;
+  color: #656565;
+}
+
+h2{
+  color: #444;
+  font-size: 16pt;
+}
+
+h3{
+  color: #95989A;
+  font-weight: 400;
+  text-align: center;
+  font-size: 20px;
+}
+
+
+form{
+  padding: 6% 0 2% 0;
+  margin: 0 auto;
+  max-width: 660px;
+
+}
+
+.form{
+  background: white;
+  margin: 0 auto;
+  -webkit-box-shadow: 10px 10px 55px -11px rgba(0,0,0,0.13);
+-moz-box-shadow: 10px 10px 55px -11px rgba(0,0,0,0.13);
+box-shadow: 10px 10px 55px -11px rgba(0,0,0,0.13);
+text-align: center;
+}
+
+fieldset{
+  border: none;
+  padding: 0;
+}
+
+label{
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: #A1A1A1;
+  font-size: 11pt;
+}
+
+input[type='email'] {
+  background-image: url(Images/email.png);
+  background-position: 7px 11px;
+  background-repeat: no-repeat;
+  text-indent: 32px;
+}
+
+input[type='tel'] {
+  background-image: url(Images/tel.png);
+  background-position: 7px 8px;
+  background-repeat: no-repeat;
+  text-indent: 32px;
+}
+
+abbr{
+  color: #A1A1A1;
+  text-decoration: none;
+  padding-left: 3px;
+}
+
+a{
+  color: #007EFF;
+  text-decoration: none;
+  opacity: 1;
+  transition: all 0.2s ease;
+}
+
+a:hover{
+  opacity: 0.8
+}
+
+button, .button{
+  font-family: 'Inter UI', sans-serif;
+  color: white;
+  background: #FB8404;
+  border: none;
+  padding: 13px 33px;
+  font-size: 12pt;
+  transition: all 0.5s ease;
+  cursor: pointer;
+  margin-bottom: 5%;
+}
+
+button:hover{
+  background:#FF6F00;
+}
+
+fieldset div {
+  width: 100%;
+}
+
+.header{
+  padding: 6% 3% 0%;
+  border-top: 8px solid #FB8404;
+}
+
+.header h1{
+  color: #575757;
+  font-weight: 500;
+  font-size: 18pt;
+  margin: 0;
+  text-align: center;
+}
+
+.form-content{
+  padding: 5% 10%;
+  background: white;
+}
+
+.form-content p{
+  font-size: 10px;
+  color: #A1A1A1;
+}
+
+.left-align{
+  text-align: left;
+}
+
+.wrap {
+  margin-bottom: 49px;
+}
+
+.line-left{
+  background: #007EFF;
+  height:2px;
+  margin-bottom: 39px;
+}
+
+.line-left {
+  width: 0;
+  transition: width .5s ease;
+}
+
+select:focus + .line-left, input:focus + .line-left, textarea:focus + .line-left{
+  width: 100%;
+  transition: width .5s ease;
+}
+
+/*VALIDATION ERROR STYLING*/
+.v-error{
+  color: tomato !important;
+}
+
+.v-error em{
+  font-size: 10pt;
+}
+
+.error-line{
+  transition: 0.2s ease;
+  background: tomato !important;
+}
+
+.error-button{
+  opacity: 0.7 !important;
+  cursor: auto;
+}
+
+.error-button:hover{
+  background: #FB8404 !important;
+}
+
+.v-good{
+  background-image: url(Images/email.png), url(green-check.png) !important;
+  background-position: 7px 11px, right !important;
+}
+
+.good-line{
+  transition: 0.2s ease;
+  background: mediumseagreen !important;
+}
+
+/* POPUP CONTENT */
+.popup_content{
+  width: 70%;
+}
+
+input, select, textarea{
+  border: none;
+  font-family: 'Inter UI', sans-serif;
+  font-size: 12pt;
+  color: #444;
+  border-bottom: 1px solid #dadada;
+  /* background: #f2f2f2; */
+  text-indent: 5px;
+  padding: 5px 0px;
+  width:100%;
+  outline: none;
+}
+
+
+input:focus, select:focus, textarea:focus{
+  outline: none;
+  border-bottom: none;
+   transition-delay: 0.5s;
+}
+
+select option {
+  border: none;
+  outline: none;
+}
+
+.input-button{
+  color: #007EFF !important;
+  text-decoration: none;
+  opacity: 1;
+  transition: all 0.2s ease;
+  background-color: transparent;
+  border-bottom: none;
+  text-align: left;
+  cursor: pointer;
+  margin-bottom: 49px;
+}
+
+.input-button:hover{
+  opacity: 0.8;
+}
+
+.input-button:focus, .input-button:active{
+  border-bottom: none;
+}
+
+.flex-fields{
+  display: flex;
+  justify-content: space-around;
+  width: 60% !important;
+}
+
+.flex-fields div:first-child{
+  margin-right: 10%;
+}
+
+.short{
+  width: 40%;
+}
+
+.x-short{
+  width: 25%;
+}
+
+.sign-up-CTA{
+  text-align: center;
+  margin: 2% 0 5% 0;
+  font-weight: bold;
+  font-size: large;
+}
+
+.sign-up-CTA a{
+  cursor: pointer;
+}
+
+
+/*DATEPICKER*/
+.ui-datepicker{
+  background: #E6E6E6;
+  box-shadow: 0px 3px 10px rgba(0, 0, 47, .15);
+}
+.ui-datepicker-title{
+    text-align: center;
+    color: #575757;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.ui-datepicker-calendar{
+  padding: 11px 10px 15px 10px;
+}
+
+.ui-datepicker-calendar th{
+  color: #A1A1A1;
+  font-size: 10px;
+  font-weight: 400;
+}
+
+.ui-datepicker-calendar td{
+  text-align: center;
+}
+
+.ui-datepicker-calendar a{
+  color: #575757;
+  font-size: 12px;
+  padding: 1px 7px;;
+}
+
+/* .ui-datepicker-calendar a:focus, a:active{
+  background: #FB8404;
+  color: white;
+  border-radius: 10px;
+  background-image: image();
+} */
+.date-picker{
+  text-align: center;
+  color: #131313;
+  font-size: 20px;
+  background-image: url("Images/calendar icon plain.png");
+  background-repeat: no-repeat;
+  background-position: right;
+}
+.time-date, .date-picker{
+  font-size: 12pt;
+  color: #444;
+  text-align: left;
+}
+
+/*ACCORDION*/
+.accordion-container-popup{
+  text-align: left;
+  width: 100%;
+  margin-top: -30px;
+  margin-bottom: 29px;
+}
+.accordion {
+  color: #95989A;
+  font-size: 10px;
+  cursor: pointer;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  transition: 0.4s;
+}
+.panel {
+  background-color: white;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+
+
+@media (max-width: 1100px){
+  form{
+    padding: 5% 5%;
+  }
+
+  .first-div{
+    margin-right: 0px;
+  }
+  .x-short{
+    width: 35%;
+  }
+
+  .job-info, .short-input, .short-input input, select{
+    width: 100%;
+  }
+
+  .short{
+    width: 60%;
+  }
+
+  .sign-up-CTA{
+    margin: 2% 0 6% 0;
+}
+
+
+@media (max-width: 700px){
+  form{
+    padding: 10% 5%;
+  }
+
+  .header h1{
+    font-size:16pt;
+  }
+
+  .x-short{
+    width: 55%;
+  }
+
+  .showE input {
+    width: 100%;
+  }
+
+  .form-content {
+    padding: 10%;
+  }
+
+  .time-date{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .time-date>div{
+    width: 45%;
+  }
+
+  .time-zone-callout{
+    width: 100%;
+  }
+
+  .popup_content{
+    width: 100%;
+  }
+  .msg-container {
+    max-width: 92%;
+  }
+
+  .appointment-details span{
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .sign-up-CTA{
+    margin: 7% 0 7% 0;
+  }
+  .mobile-padding-fix{
+    padding: 5%;
+  }
+  .hide{
+    display: none;
+  }
+}
