@@ -1,3 +1,5 @@
+/* Instead of opacity for the button, deepen saturation/hue */
+
 .red{
   background: tomato;
 }
@@ -11,16 +13,52 @@
   background: #A1A1A1;
 }
 
-h3{
+body{
+  background: none !important;
+}
+
+h3, h1{
   text-align: left !important;
-  font-size: 12pt !important;
+}
+
+input, select, textarea{
+  border: 1px solid #C4C4C4 !important;
+  color: #131313 !important;
+}
+
+label{
+  color: #545454 !important;
+  margin-bottom: 5px !important;
+}
+
+fieldset{
+  margin-bottom: 25px;
+}
+
+.line-left{
+  margin-bottom: 20px !important;
+}
+
+.divider{
+  display: flex;
+  align-items: center;
+}
+.divider div{
+  border-bottom: 1px solid #C4C4C4;
+  margin-left: 15px;
+
+}
+
+.date-picker{
+  background-position: 98% 50% !important;
+  padding-right: 55px !important;
 }
 
 /*PRIORITY*/
 .priorities{
   display: flex;
   justify-content: space-around;
-  margin-bottom: 43px;
+  margin-bottom: 33px;
   padding-top: 5px;
 }
 .priorities div{
@@ -46,8 +84,11 @@ h3{
 
 .organisation{
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   width: 100%;
+}
+.organisation div:first-child{
+  width: 200%;
 }
 .organisation a{
   background: #E6E6E6;
@@ -55,4 +96,20 @@ h3{
   height: 15px;
   text-align: center;
   padding: 5px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  float: right;
+  margin-left: 25px;
+}
+
+@media (max-width: 700px){
+  .organisation div:first-child{
+    width: 130%;
+  }
+  .organisation a{
+    width: auto;
+    padding: 5px 15px;
+    margin-left: 15px;
+  }
 }
